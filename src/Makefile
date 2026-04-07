@@ -13,6 +13,7 @@ MYLIB = ../lib/libIO.a
 OBJECTS = \
 	ModKind.o\
 	ModCharSize.o\
+	ModTime.o\
 	ModIndices.o
 
 # DEPEND:
