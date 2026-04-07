@@ -3,7 +3,7 @@ MODULE ModIndices
 
   use ModCharSize
   use ModTimeIO
-  use ModIoUnit
+  use ModIoUnits
   use ModErrors
   use ModKind
 
@@ -15,7 +15,7 @@ MODULE ModIndices
 
     TYPE LookupTable
       INTEGER   :: iIndex
-      CHARACTER(len=16) :: idxName
+      CHARACTER(len=30) :: idxName
     ENDTYPE LookupTable
 
     integer, parameter :: nValidIndices = 16
@@ -27,7 +27,7 @@ MODULE ModIndices
       LookupTable(5,  "imfbz"), &
       LookupTable(6,  "swvx"),  &
       LookupTable(7,  "swvy"),  &
-      LookupTable(8,  "swvx"),  &
+      LookupTable(8,  "swvz"),  &
       LookupTable(9,  "swn"),   &
       LookupTable(10, "swt"),   &
       LookupTable(11, "ae"),    &
@@ -38,38 +38,48 @@ MODULE ModIndices
       LookupTable(16, "hpis")   &
       ]
 
-    integer, external :: efield_interpret_name
-    integer, external :: aurora_interpret_name
 
-  ! public
+  public :: f107
 
-  ! Here's where we store whether the library has read in a certain index type
-  ! logical :: haveF107 = .false.
-  ! logical :: haveIMF = .false.
-  ! logical :: haveHPI = .false. ! special case since it can be derived from AE/SME
-  ! logical :: haveSME = .false.
-
-  type, public :: indices
-
+  public :: indexType
+  type IndexType
     integer :: iIndex ! f107, bz, etc.
     integer :: nValues = 0
     ! Each index stores arrays of the time & value @ that time
-    real, allocatable, dimension(:) :: values
-    real, allocatable, dimension(:) :: times
+    real, allocatable, dimension(:) :: value
+    type(TimeType), allocatable, dimension(:) :: time
+  end type indexType
 
+  ! Central storage for all loaded indices
+  type(indexType), dimension(nValidIndices), public :: allIndices
 
+  ! Current time for "set once, query many" pattern
+  real(Real8_), public :: currentTime = -1.0d0
 
-  end type indices
-
+  public :: decode_index
   interface decode_index
     module procedure get_index_name
     module procedure get_index_id
   end interface decode_index
+
+  public :: get_index
+  interface get_index
+    module procedure get_index_wtime
+    module procedure get_index_wotime
+  end interface get_index
+
+  public :: set_index, set_time
+
+
 
 contains
 
   ! INCLUDE "ModFileIO.f90"
 
   INCLUDE "indices_lookup.f90"
+
+  INCLUDE "reader_subroutines.f90"
+
+  INCLUDE "index_retrieval.f90"
 
 end MODULE ModIndices
