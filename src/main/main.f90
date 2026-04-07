@@ -7,6 +7,11 @@ program testIO
 
   type(TimeType) :: now
   real(Real8_) :: JD
+  integer :: iIndex, iErr
+  character(50) :: indexName
+  real :: f107val
+
+
   print*, "Beginning main..."
 
   print*, "> setting time to 2011-03-16 00:12:15.0"
@@ -49,7 +54,47 @@ program testIO
   call time_int_to_real(now)
   print*, now
 
+  print*, "-------------"
+  print*, ""
+  print*, "> What number is f107??:  ",  decode_index('f107')
 
+  print*, "> What variable is #1??:   ", trim(decode_index(1))
+
+  call report_errors
+
+  print*, "-------------"
+  print*, ""
+  print*, "> Reading f107 file..."
+  call f107("data/f107.txt")
+  call report_errors
+
+  if (isOk) then
+    print*, "> f107 read successfully!"
+    print*, "> Number of f107 values: ", allIndices(1)%nValues
+
+    ! Test get_index with explicit time
+    print*, ""
+    print*, "> Testing get_index with explicit time..."
+    now%iYear = 2011
+    now%iMonth = 3
+    now%iDay = 16
+    now%iHour = 12
+    now%iMinute = 0
+    now%iSecond = 0
+    call time_int_to_real(now)
+
+    call get_index(1, now%Time, f107val, iErr)
+    print*, "> f107 at 2011-03-16 12:00 = ", f107val, " (error=", iErr, ")"
+
+    ! Test set_time + get_index without time
+    print*, ""
+    print*, "> Testing set_time + get_index..."
+    call set_time(now%Time)
+    call get_index(1, f107val, iErr)
+    print*, "> f107 (via set_time)    = ", f107val, " (error=", iErr, ")"
+  else
+    print*, "> f107 read FAILED"
+  endif
 
   call report_errors
 
