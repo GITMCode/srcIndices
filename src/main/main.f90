@@ -21,13 +21,6 @@ program testIO
   call time_int_to_real(now)
   print*, now
 
-  print*, "Testing day of year:"
-
-  now%iMonth = 1
-  now%iDay = 160
-  call time_int_to_real(now)
-  print*, now
-
   print*, 'Testing (incorrect) usage of day of year conversion'
   print*, 'This should not work...'
   now%iMonth = 2
@@ -41,7 +34,17 @@ program testIO
     print*, "Everything is ok. It shouldn't be!"
   else
     print*, "Correctly found the time error. Nice!!"
+    ! call flush_errors
   endif
+
+  print*, "Testing day of year:"
+
+  now%iMonth = 1
+  now%iDay = 160
+  call time_int_to_real(now)
+  print*, now
+
+  call report_errors
 
 
 end program
