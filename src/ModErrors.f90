@@ -30,6 +30,17 @@ contains
     enddo
   end subroutine report_errors
 
+  subroutine flush_errors()
+    integer :: iError
+    if (nErrors /= 0) then
+      write(*, *) "Clearing", nErrors, "errors!"
+      cErrorCodes = [('', iError=1,nErrors)]
+      nErrors = 0
+      isOk = .true.
+    endif
+  end subroutine flush_errors
+
+
   ! -- This is for things that should not stop GITM, but notify user now & later. -- !
   subroutine raise_warning(cWarning)
     character(len=*), intent(in) :: cWarning
