@@ -61,8 +61,8 @@ MODULE ModIndices
   end type indices
 
   interface decode_index
-    module procedure lookup_index_name
-    module procedure lookup_index_integer
+    module procedure get_index_name
+    module procedure get_index_id
   end interface decode_index
 
 contains
