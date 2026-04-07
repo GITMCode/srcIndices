@@ -1,0 +1,17 @@
+# Compiled files
+*.o
+*.mod
+*.a
+*.exe
+*.DEPEND
+*.depend
+
+# Run dirs
+run*/
+
+# Backup files for editors:
+*~
+*#
+
+# Python extras
+__pycache__
