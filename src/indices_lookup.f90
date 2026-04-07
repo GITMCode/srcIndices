@@ -1,5 +1,5 @@
 
-  character function get_index_name(iIndex) result(name)
+  character(50) function get_index_name(iIndex) result(name)
     integer, intent(in) :: iIndex
 
     name = trim(indicesLookup(iIndex)%idxName)
@@ -14,7 +14,7 @@
     do i=1,nValidIndices ! Find where the index name matches what we're given
       if (trim(indicesLookup(i)%idxName) == trim(indName)) then
         iIndex = indicesLookup(i)%iIndex
-        exit
+        return
       endif
     enddo
     if (iIndex==-1) then
