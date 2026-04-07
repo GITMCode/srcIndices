@@ -3,6 +3,7 @@ MODULE ModIndices
 
   use ModCharSize
   use ModTimeIO
+  use ModIoUnit
   use ModErrors
   use ModKind
 

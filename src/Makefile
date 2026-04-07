@@ -15,6 +15,7 @@ OBJECTS = \
 	ModCharSize.o\
 	ModErrors.o\
 	ModTime.o\
+	ModIoUnit.o\
 	ModIndices.o
 
 # DEPEND:
