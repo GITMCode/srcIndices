@@ -71,28 +71,28 @@ program testIO
   if (.not. isOk) stop
 
   print*, "> f107 file read successfully!"
-    print*, "> Number of f107 values: ", allIndices(1)%nValues
+  print*, "> Number of f107 values: ", allIndices(1)%nValues
   print*, ">> Number of f107a values: ", allIndices(2)%nValues
 
-    ! Test get_index with explicit time
-    print*, ""
-    print*, "> Testing get_index with explicit time..."
-    now%iYear = 2011
-    now%iMonth = 3
-    now%iDay = 16
-    now%iHour = 12
-    now%iMinute = 0
-    now%iSecond = 0
-    call time_int_to_real(now)
+  ! Test get_index with explicit time
+  print*, ""
+  print*, "> Testing get_index with explicit time..."
+  now%iYear = 2011
+  now%iMonth = 3
+  now%iDay = 16
+  now%iHour = 12
+  now%iMinute = 0
+  now%iSecond = 0
+  call time_int_to_real(now)
 
-    call get_index(1, now%Time, f107val, iErr)
+  call get_index(1, now%Time, f107val, iErr)
   print*, ">> f107 at 2011-03-16 12:00 = ", f107val
 
-    ! Test set_time + get_index without time
-    print*, ""
-    print*, "> Testing set_time + get_index..."
-    call set_time(now%Time)
-    call get_index(1, f107val, iErr)
+  ! Test set_time + get_index without time
+  print*, ""
+  print*, "> Testing set_time + get_index..."
+  call set_time(now%Time)
+  call get_index(1, f107val, iErr)
   
   print*, ">> f107 (via set_time)    = ", f107val
 
