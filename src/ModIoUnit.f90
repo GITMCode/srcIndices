@@ -1,5 +1,5 @@
 
-module ModIoUnit
+module ModIoUnits
 
   implicit none
 
@@ -11,6 +11,9 @@ module ModIoUnit
   public :: io_unit_clean  ! Close open units, delete empty files
 
   !PUBLIC DATA MEMBERS:
+
+  integer, parameter, public :: nIndexValuesMax = 500000 ! hopefully this is enough :)
+  real, parameter, public  :: iBadValue = -6e6
 
   integer, parameter, public :: StdIn_ = 5  ! Standard input
   integer, parameter, public :: StdOut_ = 6  ! Standard output
@@ -91,4 +94,4 @@ contains
 
   end subroutine io_unit_clean
 
-end module ModIoUnit
+end module ModIoUnits
