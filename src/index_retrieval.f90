@@ -30,7 +30,7 @@
   end subroutine set_time
 
   ! get_index with explicit time
-  subroutine get_index_wtime(iIndex, timeIn, value, iError)
+  subroutine get_index_int_wtime(iIndex, timeIn, value, iError)
     integer, intent(in) :: iIndex
     real(Real8_), intent(in) :: timeIn
     real, intent(out) :: value
@@ -116,10 +116,10 @@
               (1.0 - DtNorm) * allIndices(iIndex)%value(iMin)
     endif
 
-  end subroutine get_index_wtime
+  end subroutine get_index_int_wtime
 
   ! get_index using stored currentTime
-  subroutine get_index_wotime(iIndex, value, iError)
+  subroutine get_index_int_wotime(iIndex, value, iError)
     integer, intent(in) :: iIndex
     real, intent(out) :: value
     integer, intent(out) :: iError
@@ -131,6 +131,40 @@
       return
     endif
 
-    call get_index_wtime(iIndex, currentTime, value, iError)
+    call get_index_int_wtime(iIndex, currentTime, value, iError)
+  end subroutine get_index_int_wotime
 
-  end subroutine get_index_wotime
+  ! get_index from str using stored currentTime
+  subroutine get_index_char_wotime(cIndex, value, iError)
+    character(*), intent(in) :: cIndex
+    real, intent(out) :: value
+    integer, intent(out) :: iError
+    integer :: iIndex
+
+    if (currentTime < 0.0d0) then
+      iError = 5
+      value = -1.0e32
+      call set_error("get_index: no time set. Call set_time first.")
+      return
+    endif
+
+    iIndex = decode_index(cIndex)
+
+    call get_index_int_wtime(iIndex, currentTime, value, iError)
+
+  end subroutine get_index_char_wotime
+
+  
+  ! get_index from str using stored currentTime
+  subroutine get_index_char_wtime(cIndex, timein, value, iError)
+    character(*), intent(in) :: cIndex
+    real(Real8_), intent(in) :: timeIn
+    real, intent(out) :: value
+    integer, intent(out) :: iError
+    integer :: iIndex
+
+    iIndex = decode_index(cIndex)
+
+    call get_index_int_wtime(iIndex, timein, value, iError)
+
+  end subroutine get_index_char_wtime

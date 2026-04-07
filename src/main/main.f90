@@ -96,6 +96,23 @@ program testIO
   
   print*, ">> f107 (via set_time)    = ", f107val
 
+
+  ! Test set_time + get_index without specifying time in call
+  print*, ""
+  print*, "> Testing set_time + get_index with chars..."
+  call set_time(now%Time)
+  call get_index("f107", f107val, iErr)
+
+  print*, ">> f107 (via chars & set_time)    = ", f107val
+
+
+  print*, ""
+  print*, "> Testing get_index with manual time & chars..."
+  call get_index("f107", now%time, f107val, iErr)
+  print*, ">> f107 (via chars & real-time)    = ", f107val
+
+
+  print*, ""
   call report_errors
 
 end program

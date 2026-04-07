@@ -64,8 +64,10 @@ MODULE ModIndices
 
   public :: get_index
   interface get_index
-    module procedure get_index_wtime
-    module procedure get_index_wotime
+    module procedure get_index_int_wtime
+    module procedure get_index_int_wotime
+    module procedure get_index_char_wtime
+    module procedure get_index_char_wotime
   end interface get_index
 
   public :: set_index, set_time
