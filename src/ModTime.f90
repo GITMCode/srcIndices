@@ -147,6 +147,12 @@ contains
     ! of Time.
 
     character(len=*), parameter:: NameSub = 'time_int_to_real1'
+
+    do while (Time%iDay >= nDayInMonth_I(Time%iMonth))
+       Time%iDay = Time%iDay - nDayInMonth_I(Time%iMonth)
+       Time%iMonth = Time%iMonth + 1
+    end do
+
     !--------------------------------------------------------------------------
     if(.not.is_valid_int_time(Time))then
        write(*,*)NameSub,': invalid Time = ',Time
