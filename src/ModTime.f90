@@ -4,6 +4,7 @@
 module ModTimeIO
 
   use ModKind
+  use ModErrors, only: set_error
 
   implicit none
 
@@ -148,15 +149,16 @@ contains
 
     character(len=*), parameter:: NameSub = 'time_int_to_real1'
 
-    do while (Time%iDay >= nDayInMonth_I(Time%iMonth))
-       Time%iDay = Time%iDay - nDayInMonth_I(Time%iMonth)
-       Time%iMonth = Time%iMonth + 1
-    end do
-
+    if (Time%iMonth == 1) then
+      do while (Time%iDay >= nDayInMonth_I(Time%iMonth))
+         Time%iDay = Time%iDay - nDayInMonth_I(Time%iMonth)
+         Time%iMonth = Time%iMonth + 1
+      end do
+    endif
     !--------------------------------------------------------------------------
     if(.not.is_valid_int_time(Time))then
        write(*,*)NameSub,': invalid Time = ',Time
-      !  call CON_stop(NameSub//' ERROR invalid time')
+       call set_error(NameSub//' ERROR invalid time')
     end if
 
     Time % Time = &

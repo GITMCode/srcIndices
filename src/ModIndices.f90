@@ -2,7 +2,8 @@
 MODULE ModIndices
 
   use ModCharSize
-  ! use ModTimeAmie
+  use ModTimeIO
+  use ModErrors
   use ModKind
 
   implicit none
@@ -40,8 +41,6 @@ MODULE ModIndices
     integer, external :: aurora_interpret_name
 
   ! public
-
-  logical :: isOk = .true.
 
   ! Here's where we store whether the library has read in a certain index type
   ! logical :: haveF107 = .false.
