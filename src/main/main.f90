@@ -56,21 +56,23 @@ program testIO
 
   print*, "-------------"
   print*, ""
-  print*, "> What number is f107??:  ",  decode_index('f107')
+  print*, "> What (internal) number is f107??:  ",  decode_index('f107')
 
   print*, "> What variable is #1??:   ", trim(decode_index(1))
 
   call report_errors
 
-  print*, "-------------"
+  print*, "------------------------"
   print*, ""
   print*, "> Reading f107 file..."
   call f107("data/f107.txt")
   call report_errors
 
-  if (isOk) then
-    print*, "> f107 read successfully!"
+  if (.not. isOk) stop
+
+  print*, "> f107 file read successfully!"
     print*, "> Number of f107 values: ", allIndices(1)%nValues
+  print*, ">> Number of f107a values: ", allIndices(2)%nValues
 
     ! Test get_index with explicit time
     print*, ""
@@ -84,17 +86,15 @@ program testIO
     call time_int_to_real(now)
 
     call get_index(1, now%Time, f107val, iErr)
-    print*, "> f107 at 2011-03-16 12:00 = ", f107val, " (error=", iErr, ")"
+  print*, ">> f107 at 2011-03-16 12:00 = ", f107val
 
     ! Test set_time + get_index without time
     print*, ""
     print*, "> Testing set_time + get_index..."
     call set_time(now%Time)
     call get_index(1, f107val, iErr)
-    print*, "> f107 (via set_time)    = ", f107val, " (error=", iErr, ")"
-  else
-    print*, "> f107 read FAILED"
-  endif
+  
+  print*, ">> f107 (via set_time)    = ", f107val
 
   call report_errors
 
