@@ -11,7 +11,6 @@ contains
     character(len=*), intent(in) :: filename
     type(TimeType), dimension(nIndexValuesMax), intent(out) :: times
     real, dimension(nIndexValuesMax), intent(out) :: values
-    ! real, dimension(nIndexValuesMax), intent(out) :: values
 
     integer :: iError, iPt, ioUnit
     type(TimeType) :: iTime
