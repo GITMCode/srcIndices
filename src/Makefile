@@ -17,6 +17,7 @@ OBJECTS = \
 	ModTime.o\
 	ModIoUnit.o\
 	ModF107.o\
+	ModSME.o\
 	ModIndices.o
 
 # DEPEND:

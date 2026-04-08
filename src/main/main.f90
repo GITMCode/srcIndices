@@ -10,8 +10,8 @@ program testIO
   integer :: iIndex
   character(50) :: indexName
   real :: f107val, f107aval
-  real :: ae
-  integer :: iMM, iDD
+  real :: ae, au, al
+  integer :: iMM, iDD, iAL
 
 
   print*, "Beginning main..."
@@ -138,10 +138,33 @@ program testIO
   print*, " > here's a check for data we should not have"
   call get_index("ae", ae)
   print*, "AE= ", ae, " ... isOK:", isOk
+ call flush_errors
 
+  
+  print*, ""
+  print*, " >OK cool now read the SME data & look at it"
+  call sme("data/ae20021221.dat")
+  ! Check how many pts were read in
+  iAL = decode_index('al')
+  print*, "nPts AL = ", allIndices(iAL)%nValues, " ... isOK:", isOk
+  now %iYear = 2002
+  now%iMonth=12
+  now%iDay=21
+  now%iHour = 23
+  now%iSecond = 0
+  now%fracSecond = 0.0d0
+  do iMM=50,59
+    now%iMinute=iMM
+    call set_time(now)
+    call get_index('ae', ae)
+    call get_index('al', al)
+    call get_index('au', au)
+    print*, "min:", now%iMinute, 'ae', ae, 'al', al, 'au', au
+  enddo
 
   print*, ""
   call report_warnings
   call report_errors
+
 
 end program

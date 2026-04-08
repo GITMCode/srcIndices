@@ -40,6 +40,7 @@ MODULE ModIndices
 
 
   public :: f107
+  public :: sme
 
   public :: indexType
   type IndexType

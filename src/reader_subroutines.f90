@@ -40,3 +40,41 @@ subroutine f107(filename)
   call set_index(iF107a, f107a_times(1:nPtsa), f107a_vals(1:nPtsa), nPtsa)
 
 end subroutine f107
+
+
+subroutine sme(filename)
+  use ModSME, only: read_sme
+
+  character(*), intent(in) :: filename
+
+  integer :: iPt, iAE, iAU, iAL
+  type(TimeType), dimension(nIndexValuesMax) :: times
+  real, dimension(nIndexValuesMax) :: ae_tmp, au_tmp, al_tmp
+  real, dimension(:), allocatable :: ae_vals, au_vals, al_vals
+  
+  integer :: nPts, i
+
+  call read_sme(filename, times, ae_tmp, au_tmp, al_tmp)
+
+  if (.not. isOk) return
+
+  ! Determine how many valid values we have
+  nPts = nIndexValuesMax
+  do i = 1, nIndexValuesMax
+    if (ae_tmp(i) == rBadValue) then
+      nPts = i - 1
+      exit
+    endif
+  enddo
+
+  ! Set F107 values...
+  iAE = decode_index("ae")
+  iAU = decode_index("au")
+
+  iAL = decode_index("al")
+  call set_index(iAE, times(1:nPts), ae_tmp(1:nPts), nPts)
+  call set_index(iAU, times(1:nPts), au_tmp(1:nPts), nPts)
+  call set_index(iAL, times(1:nPts), al_tmp(1:nPts), nPts)
+
+
+end subroutine sme
