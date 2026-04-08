@@ -7,7 +7,7 @@ program testIO
 
   type(TimeType) :: now
   real(Real8_) :: JD
-  integer :: iIndex, iErr
+  integer :: iIndex
   character(50) :: indexName
   real :: f107val, f107aval
   integer :: iMM, iDD
@@ -86,14 +86,14 @@ program testIO
   now%iSecond = 0
   call time_int_to_real(now)
 
-  call get_index(1, now%Time, f107val, iErr)
+  call get_index(1, now%Time, f107val)
   print*, ">> f107 at 2011-03-16 12:00 = ", f107val
 
   ! Test set_time + get_index without time
   print*, ""
   print*, "> Testing set_time + get_index..."
   call set_time(now%Time)
-  call get_index(1, f107val, iErr)
+  call get_index(1, f107val)
   
   print*, ">> f107 (via set_time)    = ", f107val
 
@@ -102,14 +102,14 @@ program testIO
   print*, ""
   print*, "> Testing set_time + get_index with chars..."
   call set_time(now%Time)
-  call get_index("f107", f107val, iErr)
+  call get_index("f107", f107val)
 
   print*, ">> f107 (via chars & set_time)    = ", f107val
 
 
   print*, ""
   print*, "> Testing get_index with manual time & chars..."
-  call get_index("f107", now%time, f107val, iErr)
+  call get_index("f107", now%time, f107val)
   print*, ">> f107 (via chars & real-time)    = ", f107val
 
 
@@ -127,8 +127,8 @@ program testIO
       now%iMonth=iMM
       now%iDay=iDD
       call set_time(now)
-      call get_index("f107", f107val, iErr)
-      call get_index("f107a", f107aval, iErr)
+      call get_index("f107", f107val)
+      call get_index("f107a", f107aval)
       write(*, '(A20, F10.1, F10.1)') now%String, f107val, f107aval
     enddo
   enddo

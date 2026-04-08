@@ -54,56 +54,44 @@
   end subroutine set_time_components
 
   ! get_index with explicit time
-  subroutine get_index_int_wtime(iIndex, timeIn, value, iError)
+  subroutine get_index_int_wtime(iIndex, timeIn, outVal)
     integer, intent(in) :: iIndex
     real(Real8_), intent(in) :: timeIn
-    real, intent(out) :: value
-    integer, intent(out) :: iError
+    real, intent(out) :: outVal
 
     integer :: iMin, iMax, iCenter, nVals
     real :: DtNorm
     logical :: IsFound
 
-    iError = 0
-    value = -1.0e32
+    outVal = iBadValue
 
     if (iIndex < 1 .or. iIndex > nValidIndices) then
-      iError = 1
+      call set_error("(get_index)- invalid index ID")
       return
     endif
 
     nVals = allIndices(iIndex)%nValues
 
     if (nVals == 0) then
-      iError = 2
+      call set_error("(get_index) no data loaded for index: "// decode_index(iIndex))
       return
     endif
 
     ! Single value = constant
     if (nVals == 1) then
-      value = allIndices(iIndex)%value(1)
+      outVal = allIndices(iIndex)%value(1)
       return
     endif
 
     ! Before first time: clamp to first value
     if (timeIn <= allIndices(iIndex)%time(1)%Time) then
-      value = allIndices(iIndex)%value(1)
-      if ((allIndices(iIndex)%time(1)%Time - timeIn) > &
-          5.0d0 * (allIndices(iIndex)%time(2)%Time - &
-                   allIndices(iIndex)%time(1)%Time)) then
-        iError = 3
-      endif
+      outVal = allIndices(iIndex)%value(1)
       return
     endif
 
     ! After last time: clamp to last value
     if (timeIn >= allIndices(iIndex)%time(nVals)%Time) then
-      value = allIndices(iIndex)%value(nVals)
-      if ((timeIn - allIndices(iIndex)%time(nVals)%Time) > &
-          5.0d0 * (allIndices(iIndex)%time(2)%Time - &
-                   allIndices(iIndex)%time(1)%Time)) then
-        iError = 3
-      endif
+      outVal = allIndices(iIndex)%value(nVals)
       return
     endif
 
@@ -131,64 +119,58 @@
 
     ! Linear interpolation
     if (iMin == iMax) then
-      value = allIndices(iIndex)%value(iCenter)
+      outVal = allIndices(iIndex)%value(iCenter)
     else
       DtNorm = 1.0 - real(allIndices(iIndex)%time(iMax)%Time - timeIn) / &
                real(allIndices(iIndex)%time(iMax)%Time - &
                     allIndices(iIndex)%time(iMin)%Time + 1.0d-6)
-      value = DtNorm * allIndices(iIndex)%value(iMax) + &
+      outVal = DtNorm * allIndices(iIndex)%value(iMax) + &
               (1.0 - DtNorm) * allIndices(iIndex)%value(iMin)
     endif
 
   end subroutine get_index_int_wtime
 
   ! get_index using stored currentTime
-  subroutine get_index_int_wotime(iIndex, value, iError)
+  subroutine get_index_int_wotime(iIndex, outVal)
     integer, intent(in) :: iIndex
-    real, intent(out) :: value
-    integer, intent(out) :: iError
+    real, intent(out) :: outVal
 
     if (currentTime < 0.0d0) then
-      iError = 5
-      value = -1.0e32
+      outVal = iBadValue
       call set_error("get_index: no time set. Call set_time first.")
       return
     endif
 
-    call get_index_int_wtime(iIndex, currentTime, value, iError)
+    call get_index_int_wtime(iIndex, currentTime, outVal)
   end subroutine get_index_int_wotime
 
   ! get_index from str using stored currentTime
-  subroutine get_index_char_wotime(cIndex, value, iError)
+  subroutine get_index_char_wotime(cIndex, outVal)
     character(*), intent(in) :: cIndex
-    real, intent(out) :: value
-    integer, intent(out) :: iError
+    real, intent(out) :: outVal
     integer :: iIndex
 
     if (currentTime < 0.0d0) then
-      iError = 5
-      value = -1.0e32
+      outVal = iBadValue
       call set_error("get_index: no time set. Call set_time first.")
       return
     endif
 
     iIndex = decode_index(cIndex)
 
-    call get_index_int_wtime(iIndex, currentTime, value, iError)
+    call get_index_int_wtime(iIndex, currentTime, outVal)
 
   end subroutine get_index_char_wotime
 
-  
-  ! get_index from str using stored currentTime
-  subroutine get_index_char_wtime(cIndex, timein, value, iError)
+  ! get_index from str with explicit time
+  subroutine get_index_char_wtime(cIndex, timein, outVal)
     character(*), intent(in) :: cIndex
     real(Real8_), intent(in) :: timeIn
-    real, intent(out) :: value
-    integer, intent(out) :: iError
+    real, intent(out) :: outVal
     integer :: iIndex
 
     iIndex = decode_index(cIndex)
 
-    call get_index_int_wtime(iIndex, timein, value, iError)
+    call get_index_int_wtime(iIndex, timein, outVal)
 
   end subroutine get_index_char_wtime
