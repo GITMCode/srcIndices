@@ -96,9 +96,6 @@ subroutine read_sme(filename, times, ae, au, al)
     endif
 
   enddo
-  do j = iPt-11, iPt-1
-  print*, "STORED:", j, times(j)%iHour, times(j)%iMinute, ae(j), al(j), au(j)
-enddo
 
   close(ioUnit)
 
