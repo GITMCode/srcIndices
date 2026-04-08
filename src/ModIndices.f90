@@ -70,7 +70,14 @@ MODULE ModIndices
     module procedure get_index_char_wotime
   end interface get_index
 
-  public :: set_index, set_time
+  public :: set_index
+
+  public :: set_time
+  interface set_time
+    module procedure set_time_real
+    module procedure set_time_type
+    module procedure set_time_components
+  end interface set_time
 
 
 

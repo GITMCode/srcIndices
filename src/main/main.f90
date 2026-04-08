@@ -9,7 +9,8 @@ program testIO
   real(Real8_) :: JD
   integer :: iIndex, iErr
   character(50) :: indexName
-  real :: f107val
+  real :: f107val, f107aval
+  integer :: iMM, iDD
 
 
   print*, "Beginning main..."
@@ -110,6 +111,27 @@ program testIO
   print*, "> Testing get_index with manual time & chars..."
   call get_index("f107", now%time, f107val, iErr)
   print*, ">> f107 (via chars & real-time)    = ", f107val
+
+
+  print*, ""
+  print*, "> Getting the last few times in the F107 file. Verify these!"
+  ! reset time
+  now%iYear = 2025
+  now%iHour = 0
+  now%iMinute = 0
+  now%iSecond = 0
+  print*, "================================="
+  write(*, '(A20, A10, A10)') "time", "f107", "f107a"
+  do iMM=3,5
+    do iDD=1,30,15
+      now%iMonth=iMM
+      now%iDay=iDD
+      call set_time(now)
+      call get_index("f107", f107val, iErr)
+      call get_index("f107a", f107aval, iErr)
+      write(*, '(A20, F10.1, F10.1)') now%String, f107val, f107aval
+    enddo
+  enddo
 
 
   print*, ""

@@ -24,10 +24,34 @@
 
   end subroutine set_index
 
-  subroutine set_time(timeIn)
+  subroutine set_time_real(timeIn)
     real(Real8_), intent(in) :: timeIn
     currentTime = timeIn
-  end subroutine set_time
+  end subroutine set_time_real
+
+  subroutine set_time_type(timeIn)
+    type(TimeType), intent(inout) :: timeIn
+    call time_int_to_real(timeIn)
+    currentTime = timeIn%Time
+  end subroutine set_time_type
+
+  subroutine set_time_components(iYear, iMonth, iDay, iHour, iMinute, iSecond)
+    integer, intent(in) :: iYear, iMonth, iDay
+    integer, intent(in), optional :: iHour, iMinute, iSecond
+    type(TimeType) :: timeTmp
+    timeTmp%iYear = iYear
+    timeTmp%iMonth = iMonth
+    timeTmp%iDay = iDay
+    timeTmp%iHour = 0
+    timeTmp%iMinute = 0
+    timeTmp%iSecond = 0
+    timeTmp%FracSecond = 0.0d0
+    if (present(iHour)) timeTmp%iHour = iHour
+    if (present(iMinute)) timeTmp%iMinute = iMinute
+    if (present(iSecond)) timeTmp%iSecond = iSecond
+    call time_int_to_real(timeTmp)
+    currentTime = timeTmp%Time
+  end subroutine set_time_components
 
   ! get_index with explicit time
   subroutine get_index_int_wtime(iIndex, timeIn, value, iError)
