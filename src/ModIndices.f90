@@ -91,7 +91,7 @@ contains
 
   INCLUDE "indices_lookup.f90"
 
-  INCLUDE "reader_subroutines.f90"
+  INCLUDE "initialize_indices.f90"
 
   INCLUDE "index_retrieval.f90"
 
