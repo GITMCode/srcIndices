@@ -54,7 +54,8 @@ MODULE ModIndices
   type(indexType), dimension(nValidIndices), public :: allIndices
 
   ! Current time for "set once, query many" pattern
-  real(Real8_), public :: currentTime = -1.0d0
+  type(TimeType), public :: currentTime = &
+    TimeType(0, 0, 0, 0, 0, 0, 0.0d0, -1.0d0, "")
 
   public :: decode_index
   interface decode_index

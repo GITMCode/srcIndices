@@ -26,31 +26,30 @@
 
   subroutine set_time_real(timeIn)
     real(Real8_), intent(in) :: timeIn
-    currentTime = timeIn
+    currentTime%Time = timeIn
+    call time_real_to_int(currentTime)
   end subroutine set_time_real
 
   subroutine set_time_type(timeIn)
     type(TimeType), intent(inout) :: timeIn
     call time_int_to_real(timeIn)
-    currentTime = timeIn%Time
+    currentTime = timeIn
   end subroutine set_time_type
 
   subroutine set_time_components(iYear, iMonth, iDay, iHour, iMinute, iSecond)
     integer, intent(in) :: iYear, iMonth, iDay
     integer, intent(in), optional :: iHour, iMinute, iSecond
-    type(TimeType) :: timeTmp
-    timeTmp%iYear = iYear
-    timeTmp%iMonth = iMonth
-    timeTmp%iDay = iDay
-    timeTmp%iHour = 0
-    timeTmp%iMinute = 0
-    timeTmp%iSecond = 0
-    timeTmp%FracSecond = 0.0d0
-    if (present(iHour)) timeTmp%iHour = iHour
-    if (present(iMinute)) timeTmp%iMinute = iMinute
-    if (present(iSecond)) timeTmp%iSecond = iSecond
-    call time_int_to_real(timeTmp)
-    currentTime = timeTmp%Time
+    currentTime%iYear = iYear
+    currentTime%iMonth = iMonth
+    currentTime%iDay = iDay
+    currentTime%iHour = 0
+    currentTime%iMinute = 0
+    currentTime%iSecond = 0
+    currentTime%FracSecond = 0.0d0
+    if (present(iHour)) currentTime%iHour = iHour
+    if (present(iMinute)) currentTime%iMinute = iMinute
+    if (present(iSecond)) currentTime%iSecond = iSecond
+    call time_int_to_real(currentTime)
   end subroutine set_time_components
 
   ! get_index with explicit time
@@ -135,13 +134,13 @@
     integer, intent(in) :: iIndex
     real, intent(out) :: outVal
 
-    if (currentTime < 0.0d0) then
+    if (currentTime%Time < 0.0d0) then
       outVal = iBadValue
       call set_error("get_index: no time set. Call set_time first.")
       return
     endif
 
-    call get_index_int_wtime(iIndex, currentTime, outVal)
+    call get_index_int_wtime(iIndex, currentTime%Time, outVal)
   end subroutine get_index_int_wotime
 
   ! get_index from str using stored currentTime
@@ -150,7 +149,7 @@
     real, intent(out) :: outVal
     integer :: iIndex
 
-    if (currentTime < 0.0d0) then
+    if (currentTime%Time < 0.0d0) then
       outVal = iBadValue
       call set_error("get_index: no time set. Call set_time first.")
       return
@@ -158,7 +157,7 @@
 
     iIndex = decode_index(cIndex)
 
-    call get_index_int_wtime(iIndex, currentTime, outVal)
+    call get_index_int_wtime(iIndex, currentTime%Time, outVal)
 
   end subroutine get_index_char_wotime
 
