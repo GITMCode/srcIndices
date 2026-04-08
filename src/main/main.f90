@@ -10,6 +10,7 @@ program testIO
   integer :: iIndex
   character(50) :: indexName
   real :: f107val, f107aval
+  real :: ae
   integer :: iMM, iDD
 
 
@@ -132,6 +133,11 @@ program testIO
       write(*, '(A20, F10.1, F10.1)') now%String, f107val, f107aval
     enddo
   enddo
+
+  print*, ""
+  print*, " > here's a check for data we should not have"
+  call get_index("ae", ae)
+  print*, "AE= ", ae, " ... isOK:", isOk
 
 
   print*, ""
