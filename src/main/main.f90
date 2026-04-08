@@ -141,6 +141,7 @@ program testIO
 
 
   print*, ""
+  call report_warnings
   call report_errors
 
 end program

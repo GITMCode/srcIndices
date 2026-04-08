@@ -51,9 +51,9 @@ contains
 
   subroutine report_warnings()
     integer :: iWarning
-    if (nWarnings == 0) write(*, *) "No errors to report!"
+    if (nWarnings == 0) write(*, *) "No warnings to report!"
     do iWarning = 1, nWarnings
-      write(*, *) "--> Error : ", trim(cWarningCodes(iWarning))
+      write(*, *) "---> Warning : ", trim(cWarningCodes(iWarning))
     enddo
   end subroutine report_warnings
 
