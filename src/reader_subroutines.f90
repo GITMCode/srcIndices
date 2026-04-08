@@ -19,7 +19,7 @@ subroutine f107(filename)
   ! Determine how many valid values we have
   nPts = nIndexValuesMax
   do i = 1, nIndexValuesMax
-    if (values_TMP(i) == iBadValue) then
+    if (values_TMP(i) == rBadValue) then
       nPts = i - 1
       exit
     endif

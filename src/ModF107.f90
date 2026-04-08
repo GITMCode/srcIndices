@@ -18,7 +18,7 @@ contains
     real :: f107val
     logical :: done
 
-    values = iBadValue
+    values = rBadValue
     done = .false.
     ioUnit = io_unit_new()
 

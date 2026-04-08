@@ -62,7 +62,7 @@
     real :: DtNorm
     logical :: IsFound
 
-    outVal = iBadValue
+    outVal = rBadValue
 
     if (iIndex < 1 .or. iIndex > nValidIndices) then
       call set_error("(get_index)- invalid index ID")
@@ -135,7 +135,7 @@
     real, intent(out) :: outVal
 
     if (currentTime%Time < 0.0d0) then
-      outVal = iBadValue
+      outVal = rBadValue
       call set_error("get_index: no time set. Call set_time first.")
       return
     endif
@@ -150,7 +150,7 @@
     integer :: iIndex
 
     if (currentTime%Time < 0.0d0) then
-      outVal = iBadValue
+      outVal = rBadValue
       call set_error("get_index: no time set. Call set_time first.")
       return
     endif
