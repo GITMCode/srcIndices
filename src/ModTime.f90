@@ -45,10 +45,10 @@ module ModTimeIO
   integer, parameter :: iYearMin  = 1965
 
     ! Time units
-  real, parameter:: cSecondPerYear   = 31536000.0
-  real, parameter:: cSecondPerDay    =    86400.0
-  real, parameter:: cSecondPerHour   =     3600.0
-  real, parameter:: cSecondPerMinute =       60.0
+  real(Real8_), parameter:: cSecondPerYear   = 31536000.0d0
+  real(Real8_), parameter:: cSecondPerDay    =    86400.0d0
+  real(Real8_), parameter:: cSecondPerHour   =     3600.0d0
+  real(Real8_), parameter:: cSecondPerMinute =       60.0d0
 
   ! Julian day of YearMin-01-01 UT00:00:
   ! General formula for Julian day may be found in ModTimeConvert:
