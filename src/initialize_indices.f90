@@ -1,5 +1,5 @@
 
-subroutine f107(filename)
+subroutine init_f107(filename)
   use ModF107, only: read_f107
 
   character(*), intent(in) :: filename
@@ -39,11 +39,11 @@ subroutine f107(filename)
   iF107a = decode_index("f107a")
   call set_index(iF107a, f107a_times(1:nPtsa), f107a_vals(1:nPtsa), nPtsa)
 
-end subroutine f107
+end subroutine init_f107
 
 
-subroutine sme(filename)
-  use ModSME, only: read_sme
+subroutine init_ae(filename)
+  use ModAE, only: read_sme
 
   character(*), intent(in) :: filename
 
@@ -77,4 +77,4 @@ subroutine sme(filename)
   call set_index(iAL, times(1:nPts), al_tmp(1:nPts), nPts)
 
 
-end subroutine sme
+end subroutine init_ae

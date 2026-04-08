@@ -67,7 +67,7 @@ program testIO
   print*, "------------------------"
   print*, ""
   print*, "> Reading f107 file..."
-  call f107("data/f107.txt")
+  call init_f107("data/f107.txt")
   call report_errors
 
   if (.not. isOk) stop
@@ -143,7 +143,7 @@ program testIO
   
   print*, ""
   print*, " >OK cool now read the SME data & look at it"
-  call sme("data/ae20021221.dat")
+  call init_ae("data/ae20021221.dat")
   ! Check how many pts were read in
   iAL = decode_index('al')
   print*, "nPts AL = ", allIndices(iAL)%nValues, " ... isOK:", isOk

@@ -4,7 +4,7 @@
 !==============================================================================
 
 
-module ModSME
+module ModAE
 
   use ModCharSize
   use ModTimeIO
@@ -110,4 +110,4 @@ end subroutine read_sme
 ! end subroutine read_al_onset_list
 
 !==============================================================================
-end module ModSME
+end module ModAE

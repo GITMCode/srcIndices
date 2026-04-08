@@ -1,12 +1,11 @@
 # A library for reading/retrieving common indices for ITM models
 
-Currently implemented readers and the indices read:
+Currently implemented readers/converters:
 
 | reader   |  indices read    |  indices derived |
 | ------   |  :-----------    | :---             |
-| f107(filename) | f107       | f107a            |
-| sme(filename)  | ae, au, al | hpi, hpin, hpis (optional) |
-
+| init_f107(filename) | f107       | f107a            |
+| init_ae(filename)  | ae, au, al | --  |
 
 ## Quickstart
 
@@ -27,7 +26,7 @@ cd run
 ./io_test.exe
 ```
 
-After making the run directory, subsequent runs can use the one-liner
+After making the run directory, subsequent runs can use the one-liner:
 
 ```
 make cleanall && make && ./run/io_text.exe
@@ -40,7 +39,7 @@ make cleanall && make && ./run/io_text.exe
 ## Interface
 
 - ModIndices contains the front end
-- Read a file with `call f107("data/f107.txt")`. Values will be stored unless there is an error.
+- Read a file with `call init_f107("data/f107.txt")`. Values will be stored unless there is an error.
 - Tell `get_index` what time you want. To retrieve values either:
   - Retreve values with `get_index('f107', TIME, returned_value)`, where TIME is real (seconds since Jan 1 1965)
   - Tell the library the time with `set_time()` and then `get_index('f107', returned_value)`

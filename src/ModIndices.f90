@@ -39,8 +39,8 @@ MODULE ModIndices
       ]
 
 
-  public :: f107
-  public :: sme
+  public :: init_f107
+  public :: init_ae
 
   public :: indexType
   type IndexType
