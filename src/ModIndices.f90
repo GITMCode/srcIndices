@@ -86,6 +86,8 @@ contains
 
   ! INCLUDE "ModFileIO.f90"
 
+  INCLUDE "time_subroutines.f90"
+
   INCLUDE "indices_lookup.f90"
 
   INCLUDE "reader_subroutines.f90"
