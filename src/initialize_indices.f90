@@ -9,7 +9,7 @@ subroutine init_f107(filename)
   real, dimension(nIndexValuesMax) :: values_TMP
   real, dimension(:), allocatable :: f107a_vals
   type(TimeType), dimension(:), allocatable :: f107a_times
-  
+
   integer :: nPts, i, nPtsa
 
   call read_f107(filename, times, values_TMP)
@@ -50,7 +50,7 @@ subroutine init_ae(filename)
   type(TimeType), dimension(nIndexValuesMax) :: times
   real, dimension(nIndexValuesMax) :: ae_tmp, au_tmp, al_tmp
   real, dimension(:), allocatable :: ae_vals, au_vals, al_vals
-  
+
   integer :: nPts, i
 
   call read_sme(filename, times, ae_tmp, au_tmp, al_tmp)
@@ -75,7 +75,6 @@ subroutine init_ae(filename)
   call set_index(iAU, times(1:nPts), au_tmp(1:nPts), nPts)
   call set_index(iAL, times(1:nPts), al_tmp(1:nPts), nPts)
 
-
 end subroutine init_ae
 
 subroutine init_imf(filename)
@@ -89,7 +88,6 @@ subroutine init_imf(filename)
     real, dimension(nIndexValuesMax) :: bx_tmp, by_tmp, bz_tmp
     real, dimension(nIndexValuesMax) :: vx_tmp, vy_tmp, vz_tmp
     real, dimension(nIndexValuesMax) :: den_tmp, temp_tmp
-    real, dimension(:), allocatable :: bxs, bys, bzs, vxs, vys, vzs, ns, ts
 
     integer :: nPts, i
 

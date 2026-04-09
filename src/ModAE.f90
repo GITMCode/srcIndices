@@ -89,6 +89,9 @@ contains
 
         iPt = iPt + 1
 
+        if (iPt > nIndexValuesMax) call set_error("(read_sme) Maximum number of values read!")
+
+
       endif
 
     enddo

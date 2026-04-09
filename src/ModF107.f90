@@ -62,7 +62,7 @@ contains
         times(iPt) = iTime
         values(iPt) = f107val
         iPt = iPt + 1
-        if (iPt > nIndexValuesMax) done = .true.
+        if (iPt > nIndexValuesMax) call set_error("(read_f107) Maximum number of values read!")
       endif
 
       if (.not. done) then
