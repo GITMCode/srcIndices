@@ -1,7 +1,7 @@
 
 default : LIB
 
-# Check which makefile.def to use:
+# Check which makefile.def to use by default:
 # $(wildcard path/to/file) returns a path if the file exists (empty str if not)
 # So if file exists, parens will =/= and if-block is entered
 # > If file DNE, () are equal and we include ../build/Makefile.def
@@ -17,18 +17,18 @@ endif
 
 MYLIB = ../lib/libIO.a
 
-# ModExtras.o provides ModKind, ModIoUnit, ModErrors, ModTimeConvert for standalone
-# Inside other models, this comes from elsewhere
-MODULES = \
-	ModExtras.o
+# ModExtras provides ModKind, ModIoUnit, ModErrors, ModTimeConvert for standalone
+# This can come from elsewhere or be used from ModExtras.
+# Use PreProc (in Makefile.def) to specify what's needed 
+# (#STANDALONE for all, #NEEDMODTIMECONVERT, etc.)
+
 
 OBJECTS = \
+	ModExtras.o\
 	ModF107.o\
 	ModAE.o\
 	ModIMF.o\
 	ModIndices.o
-
-${OBJECTS}: ${MODULES}
 
 DEPEND:
 	@perl ${SCRIPTDIR}/depend.pl  ${SEARCH} ${LIBDIR} ${OBJECTS}
@@ -37,12 +37,12 @@ LIB:
 	@make ${MYLIB}
 	@echo
 
-${MYLIB}: ${MODULES} ${OBJECTS}
+${MYLIB}: ${OBJECTS}
 	@echo
 	@echo 'creating LibIE'
 	@echo
 	@rm -f ${MYLIB}
-	${AR} ${MYLIB} ${MODULES} ${OBJECTS}
+	${AR} ${MYLIB} ${OBJECTS}
 
 SHARELIB: DEPEND
 	@make ${MYLIB}

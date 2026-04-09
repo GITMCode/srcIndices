@@ -9,6 +9,7 @@
 ! ModKind - define various precisions in a machine independent way
 !----------------------------------------------------------------------
 
+#if defined(STANDALONE) || defined(NEEDMODKIND)
 module ModKind
 
   implicit none
@@ -21,11 +22,12 @@ module ModKind
   integer, parameter :: nByteReal = 4 + (1.00000000041 - 1.0)*10000000000.0
 
 end module ModKind
+#endif
 
 !----------------------------------------------------------------------
 ! ModIoUnit - general utilities for Fortran I/O units.
 !----------------------------------------------------------------------
-
+#if defined(STANDALONE) || defined(NEEDMODIOUNIT)
 module ModIoUnit
 
   implicit none
@@ -117,11 +119,13 @@ contains
   end subroutine io_unit_clean
 
 end module ModIoUnit
+#endif
 
 !----------------------------------------------------------------------
 ! ModErrors - Error and warning tracking
 !----------------------------------------------------------------------
 
+#if defined(STANDALONE) || defined(NEEDMODERRORS)
 module ModErrors
 
   implicit none
@@ -176,11 +180,13 @@ contains
   end subroutine report_warnings
 
 end module ModErrors
+#endif
 
 !----------------------------------------------------------------------
 ! ModTimeConvert - Time type and conversion routines
 !----------------------------------------------------------------------
 
+#if defined(STANDALONE) || defined(NEEDMODTIMECONVERT)
 module ModTimeConvert
 
   use ModKind
@@ -525,3 +531,4 @@ contains
   !============================================================================
 
 end module ModTimeConvert
+#endif

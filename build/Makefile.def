@@ -13,6 +13,10 @@ OPT4 = -O4
 
 CFLAG = ${SEARCH} -c -w ${DEBUG} -fallow-argument-mismatch
 
+# When building standalone, define STANDALONE so ModExtras.F90 definitions are used
+# When coupled, this Makefile.def file isn't used so STANDALONE won't be def'ed
+# This configures which modules in ModExtras to build.
+# standalone will use all, otherwise use NEEDMOD* (i.e. -DNEEDMODERRORS ...)
 PreProc = -DSTANDALONE
 
 Cflag0  = ${CFLAG} ${PRECISION} ${OPT0}
