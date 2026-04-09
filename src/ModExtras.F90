@@ -1,7 +1,187 @@
-!  Copyright (C) 2024 Regents of the University of Michigan, portions
-!  used with permission
+!  ModExtras.F90 - Standalone module definitions
+!
+!  When compiling standalone (-DSTANDALONE), this file provides modules
+!  that would otherwise be supplied by the host model (e.g., SWMF/GITM).
+!  When coupled, the host model can provide
+!  ModKind, ModIoUnit, ModErrors, and ModTimeConvert.
 
-module ModTimeIO
+!----------------------------------------------------------------------
+! ModKind - define various precisions in a machine independent way
+!----------------------------------------------------------------------
+
+module ModKind
+
+  implicit none
+
+  integer, parameter :: Real4_ = selected_real_kind(6, 30)
+  integer, parameter :: Real8_ = selected_real_kind(12, 100)
+  integer, parameter :: Int8_ = selected_int_kind(16)
+
+  ! Number of bytes in the default real number (precision)
+  integer, parameter :: nByteReal = 4 + (1.00000000041 - 1.0)*10000000000.0
+
+end module ModKind
+
+!----------------------------------------------------------------------
+! ModIoUnit - general utilities for Fortran I/O units.
+!----------------------------------------------------------------------
+
+module ModIoUnit
+
+  implicit none
+
+  private ! except
+
+  !PUBLIC MEMBER FUNCTIONS:
+
+  public :: io_unit_new    ! Return an unused unit number for extended use
+  public :: io_unit_clean  ! Close open units, delete empty files
+
+  !PUBLIC DATA MEMBERS:
+
+  integer, parameter, public :: nIndexValuesMax = 500000 ! hopefully this is enough :)
+  real, parameter, public  :: rBadValue = -6e6
+
+  integer, parameter, public :: StdIn_ = 5  ! Standard input
+  integer, parameter, public :: StdOut_ = 6  ! Standard output
+
+  ! For open read/write close without intervening open
+  integer, parameter, public :: UnitTmp_ = 9  ! 1st Temporary unit number
+  integer, parameter, public :: UnitTmp2_ = 8  ! 2nd Temporary unit number
+
+  !LOCAL VARIABLES:
+
+  integer, parameter :: MinUnitNumber = 20    ! Smallest allowed unit number
+  integer, parameter :: MaxUnitNumber = 1000  ! Largest allowed unit number
+
+  integer :: iUnitMax = UnitTmp_              ! The largest unit number used
+
+  character(len=*), parameter :: NameMod = 'ModIoUnit'
+
+contains
+
+  function io_unit_new() result(iUnit)
+
+    !  Returns a unit number of a unit that exists and is not connected
+    integer :: iUnit
+    logical :: IsExisting, IsOpened
+    integer :: iError
+
+    character(len=*), parameter :: NameSub = NameMod//'::io_unit_new'
+    !--------------------------------------------------------------------
+
+    do iUnit = MinUnitNumber, MaxUnitNumber
+      inquire( &
+        unit=iUnit, &
+        exist=IsExisting, &
+        opened=IsOpened, &
+        iostat=iError)
+      if (IsExisting .and. .not. IsOpened .and. iError == 0) then
+        iUnitMax = max(iUnitMax, iUnit)
+        return
+      endif
+    enddo
+
+    iUnit = -1
+
+  end function io_unit_new
+  !===========================================================================
+  subroutine io_unit_clean
+
+    ! Close all open units for this processor
+    integer :: iUnit, iError
+    logical :: IsOpen
+    character(len=100) :: Name
+    character :: String
+    !------------------------------------------------------------------------
+    do iUnit = UNITTMP_, iUnitMax
+
+      inquire(iUnit, OPENED=IsOpen, NAME=Name)
+      if (IsOpen) then
+        ! Close file so that output is flushed
+        close(iUnit)
+        ! Try to open file and read 1 character
+        open(iUnit, FILE=Name, STATUS='old', IOSTAT=iError)
+        if (iError /= 0) CYCLE
+        read(iUnit, '(a1)', IOSTAT=iError) String
+        if (iError < 0) then
+          ! Delete empty files
+          close(iUnit, STATUS='delete')
+        else
+          ! Close file again
+          close(iUnit)
+        endif
+      endif
+    enddo
+
+  end subroutine io_unit_clean
+
+end module ModIoUnit
+
+!----------------------------------------------------------------------
+! ModErrors - Error and warning tracking
+!----------------------------------------------------------------------
+
+module ModErrors
+
+  implicit none
+
+  integer, parameter :: nErrorsMax = 1000, nWarningsMax = 1000
+  character(len=200), dimension(nErrorsMax) :: cErrorCodes, cWarningCodes
+
+  integer :: nErrors = 0, nWarnings = 0
+  logical :: isOk = .true.
+
+contains
+
+  subroutine set_error(cError)
+    character(len=*), intent(in) :: cError
+    nErrors = nErrors + 1
+    cErrorCodes(nErrors) = cError
+    isOk = .false.
+  end subroutine set_error
+
+  subroutine report_errors()
+    integer :: iError
+    if (nErrors == 0) write(*, *) "No errors to report!"
+    do iError = 1, nErrors
+      write(*, *) "--> Error : ", trim(cErrorCodes(iError))
+    enddo
+  end subroutine report_errors
+
+  subroutine flush_errors()
+    integer :: iError
+    if (nErrors /= 0) then
+      write(*, *) "Clearing", nErrors, "errors!"
+      cErrorCodes = [('', iError=1, nErrors)]
+      nErrors = 0
+      isOk = .true.
+    endif
+  end subroutine flush_errors
+
+  ! This is for things that should not stop the model, but notify user now & later
+  subroutine raise_warning(cWarning)
+    character(len=*), intent(in) :: cWarning
+    nWarnings = nWarnings + 1
+    cWarningCodes(nWarnings) = cWarning
+    write(*, *) " -> Warning: ", trim(cWarningCodes(nWarnings))
+  end subroutine raise_warning
+
+  subroutine report_warnings()
+    integer :: iWarning
+    if (nWarnings == 0) write(*, *) "No warnings to report!"
+    do iWarning = 1, nWarnings
+      write(*, *) "---> Warning : ", trim(cWarningCodes(iWarning))
+    enddo
+  end subroutine report_warnings
+
+end module ModErrors
+
+!----------------------------------------------------------------------
+! ModTimeConvert - Time type and conversion routines
+!----------------------------------------------------------------------
+
+module ModTimeConvert
 
   use ModKind
   use ModErrors, only: set_error
@@ -55,13 +235,6 @@ module ModTimeIO
   real(Real8_), parameter:: JulianDayBase = 367*iYearMin - &
                             ((7*iYearMin)/4) + 1721044.5D0  ! = 0.24387615D+07
 
-  ! revision history:
-  ! 01Aug03 Aaron Ridley and G. Toth - initial implementation
-  ! 22Aug03 G. Toth - added TypeFreq and is_time_to function
-  ! 25Aug03 G. Toth - added adjust_freq subroutine
-  ! 23Mar04 G. Toth - splitting CON_time into a smaller CON_time,
-  !                             ModTimeConvert, ModTimeFreq
-
   ! February will be adjusted.....
   integer, dimension(1:12), private :: nDayInMonth_I = [ &
                                        31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -79,7 +252,7 @@ contains
     !--------------------------------------------------------------------------
     call fix_year(Time%iYear)
     is_valid_int_time = .false.
-!    if(Time % iYear < iYearMin) RETURN
+    !    if(Time % iYear < iYearMin) RETURN
     if (Time%iMonth > 12 .or. Time%iMonth < 1) RETURN
     if (Time%iMonth == 2) call fix_february(Time%iYear)
     if (Time%iDay > nDayInMonth_I(Time%iMonth)) RETURN
@@ -186,18 +359,13 @@ contains
     character(len=*), parameter:: NameSub = 'time_real_to_int1'
     !--------------------------------------------------------------------------
     iYear = floor(Time%Time/cSecondPerYear) + iYearMin
-    ! write(*,*) 'iYear=',iYear
     do
       nLeapYear = n_leap_day(iYear)
-      ! write(*,*) 'nLeapYear=',nLeapYear
       iDay = floor((Time%Time - (iYear - iYearMin)*cSecondPerYear)/ &
                    cSecondPerDay) - nLeapYear
-      ! write(*,*)'iDay=', iDay
       if (iDay >= 0) EXIT
       iYear = iYear - 1
     enddo
-    ! write(*,*) 'iYear, nLeapYear, is_leap_year, iDay=',&
-    !     iYear,nLeapYear, is_leap_year(iYear),iDay
 
     TimeRemaining = Time%Time - (iYear - iYearMin)*cSecondPerYear
     TimeRemaining = TimeRemaining - (iDay + nLeapYear)*cSecondPerDay
@@ -212,7 +380,7 @@ contains
 
     Time%FracSecond = TimeRemaining - Time%iSecond
 
-    iMonth = 1; 
+    iMonth = 1;
     call fix_february(iYear)
 
     do while (iDay >= nDayInMonth_I(iMonth))
@@ -356,4 +524,4 @@ contains
   end subroutine time_int_to_julian
   !============================================================================
 
-end module ModTimeIO
+end module ModTimeConvert
