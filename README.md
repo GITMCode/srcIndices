@@ -75,7 +75,7 @@ The interface `set_time()` dispatches the subroutines in `time_subroutines.f90`.
      integer           :: iSecond
      real(Real8_)      :: FracSecond
      real(Real8_)      :: Time         ! time in seconds since Jan 1 1965
-     character(len=14) :: String       ! string with year...second
+     character(len=14) :: String       ! string with YYYY-MM-DD HH:MM:SS.mm
   end type TimeType
 ```
 
