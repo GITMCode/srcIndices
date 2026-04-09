@@ -40,6 +40,7 @@ MODULE ModIndices
 
   public :: init_f107
   public :: init_ae
+  public :: init_imf
 
   public :: indexType
   type IndexType

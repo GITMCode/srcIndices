@@ -10,8 +10,8 @@ program testIO
   integer :: iIndex
   character(50) :: indexName
   real :: f107val, f107aval
-  real :: ae, au, al
-  integer :: iMM, iDD, iAL
+  real :: ae, au, al, bx, by, bz
+  integer :: iMM, iDD, iAL, iBz
 
   print *, "Beginning main..."
 
@@ -156,6 +156,27 @@ program testIO
     call get_index('au', au)
     print *, "min:", now%iMinute, 'ae', ae, 'al', al, 'au', au
   enddo
+
+  print *, " > Same thing with the omni data. Last few lines (compare with tail)"
+  call init_imf("data/imf20021221.dat")
+  ! Check how many pts were read in
+  iBz = decode_index('al')
+  print *, "nPts Bz = ", allIndices(iBz)%nValues, " ... isOK:", isOk
+  now%iYear = 2002
+  now%iMonth = 12
+  now%iDay = 22
+  now%iHour = 23
+  now%iSecond = 0
+  now%fracSecond = 0.0d0
+  do iMM = 50, 59
+    now%iMinute = iMM
+    call set_time(now)
+    call get_index('imfbx', bx)
+    call get_index('imfby', by)
+    call get_index('imfbz', bz)
+    print *, "time:", now%String, '  bx', bx, 'by', by, 'bz', bz
+  enddo
+  
 
   print *, ""
   call report_warnings

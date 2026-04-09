@@ -77,3 +77,56 @@ subroutine init_ae(filename)
 
 
 end subroutine init_ae
+
+subroutine init_imf(filename)
+
+    use ModIMF, only: read_omni
+
+    character(*), intent(in) :: filename
+
+    integer :: iPt, iBx, iBy, iBz, iVx, iVy, iVz, iDen, iT
+    type(TimeType), dimension(nIndexValuesMax) :: times
+    real, dimension(nIndexValuesMax) :: bx_tmp, by_tmp, bz_tmp
+    real, dimension(nIndexValuesMax) :: vx_tmp, vy_tmp, vz_tmp
+    real, dimension(nIndexValuesMax) :: den_tmp, temp_tmp
+    real, dimension(:), allocatable :: bxs, bys, bzs, vxs, vys, vzs, ns, ts
+
+    integer :: nPts, i
+
+    call read_omni(filename, times, &
+                   bx_tmp, by_tmp, bz_tmp, &
+                   vx_tmp, vy_tmp, vz_tmp, &
+                   den_tmp, temp_tmp)
+
+    if (.not. isOk) return
+
+    ! Determine how many valid values we have
+    nPts = nIndexValuesMax
+    do i = 1, nIndexValuesMax
+      if (bz_tmp(i) == rBadValue) then
+        nPts = i - 1
+        exit
+      endif
+    enddo
+
+    ! Set F107 values...
+    iBx = decode_index("imfbx")
+    call set_index(iBx, times(1:nPts), bx_tmp(1:nPts), nPts)
+    iBy = decode_index("imfby")
+    call set_index(iBy, times(1:nPts), by_tmp(1:nPts), nPts)
+    iBz = decode_index("imfbz")
+    call set_index(iBz, times(1:nPts), bz_tmp(1:nPts), nPts)
+    
+    iVx = decode_index("swvx")
+    call set_index(iVx, times(1:nPts), vx_tmp(1:nPts), nPts)
+    iVy = decode_index("swvy")
+    call set_index(iVy, times(1:nPts), vy_tmp(1:nPts), nPts)
+    iVz = decode_index("swvz")
+    call set_index(iVz, times(1:nPts), vz_tmp(1:nPts), nPts)
+
+    iDen = decode_index("swn")
+    call set_index(iDen, times(1:nPts), den_tmp(1:nPts), nPts)
+    iT = decode_index("swt")
+    call set_index(iT, times(1:nPts), temp_tmp(1:nPts), nPts)
+
+  end subroutine init_imf

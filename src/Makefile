@@ -18,6 +18,7 @@ OBJECTS = \
 	ModIoUnit.o\
 	ModF107.o\
 	ModAE.o\
+	ModIMF.o\
 	ModIndices.o
 
 # DEPEND:
