@@ -41,6 +41,12 @@ MODULE ModIndices
   public :: init_f107
   public :: init_ae
   public :: init_imf
+  public :: init_hpi
+
+  interface init_hpi
+    module procedure init_noaa_hpi
+    module procedure init_hpi_from_ae
+  end interface init_hpi
 
   public :: indexType
   type IndexType

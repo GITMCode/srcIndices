@@ -128,3 +128,58 @@ subroutine init_imf(filename)
     call set_index(iT, times(1:nPts), temp_tmp(1:nPts), nPts)
 
   end subroutine init_imf
+
+
+  subroutine init_hpi_from_ae(indAE)
+
+    use ModTimeIO, only: time_real_to_julian
+
+    type(IndexType), intent(in) :: indAE
+    integer :: nPtsAE, iHPI, iHPIn, iHPIs, iTime
+    real, dimension(:), allocatable :: HPI, tenPSeasonalFactor
+    real :: jday
+
+    nPtsAE = indAE%nValues
+    if (nPtsAE == 0) then
+      call set_error("(init_hpi) - Cannot initialize HPI before AE")
+      return
+    endif
+
+    allocate(HPI(nPtsAE), tenPSeasonalFactor(nPtsAE))
+
+    ! AE -> HP uses formula from Wu et al, 2021
+    ! see: https://doi.org/10.1029/2020SW002629
+    iHPI = decode_index('hpi')
+    HPI = 0.102 * indAE%value + 8.953
+
+    call set_index(iHPI, indAE%time, &
+                   HPI, &
+                   nPtsAE)
+
+    ! N/S hemispheric power use a 10% offset w/ season
+    ! See: https://doi.org/10.1029/2006GL028444
+    tenPSeasonalFactor = 0
+    iHPIn = decode_index('hpin')
+    iHPIs = decode_index('hpis')
+    do iTime=1, nPtsAE
+      call time_real_to_julian(real(indAE%time(iTime)%Time), jday)
+      tenPseasonalFactor(iTime) = 0.1*cos(jday*2*3.14159/365.)
+    enddo
+  
+    call set_index(iHPIn, indAE%time, &
+                   (1 + tenPseasonalFactor)*HPI, &
+                   nPtsAE)
+    call set_index(iHPIs, indAE%time, &
+                   (1 - tenPseasonalFactor)*HPI, &
+                   nPtsAE)
+
+    end subroutine init_hpi_from_ae
+
+    subroutine init_noaa_hpi(filename)
+      character(*), intent(in) :: filename
+
+      call set_error('(init_hpi) Initializing HPI from file is not yet supported!')
+
+      return
+
+  end subroutine init_noaa_hpi
