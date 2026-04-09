@@ -30,17 +30,16 @@ subroutine init_f107(filename)
   call set_index(iF107, times(1:nPts), values_TMP(1:nPts), nPts)
 
   ! Now we need to make the F107a values
-  nPtsa = nPts-80
+  nPtsa = nPts - 80
   allocate(f107a_times(nPtsa), f107a_vals(nPtsa))
-  do i=41, nPts-40
-    f107a_times(i-40) = times(i)
-    f107a_vals(i-40) = sum(values_TMP(i-40:i+40)) / 81.0
+  do i = 41, nPts - 40
+    f107a_times(i - 40) = times(i)
+    f107a_vals(i - 40) = sum(values_TMP(i - 40:i + 40))/81.0
   enddo
   iF107a = decode_index("f107a")
   call set_index(iF107a, f107a_times(1:nPtsa), f107a_vals(1:nPtsa), nPtsa)
 
 end subroutine init_f107
-
 
 subroutine init_ae(filename)
   use ModAE, only: read_sme

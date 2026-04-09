@@ -11,33 +11,32 @@ MODULE ModIndices
 
   private
 
-    integer, parameter, public :: iZero_ = 0
+  integer, parameter, public :: iZero_ = 0
 
-    TYPE LookupTable
-      INTEGER   :: iIndex
-      CHARACTER(len=30) :: idxName
-    ENDTYPE LookupTable
+  TYPE LookupTable
+    INTEGER   :: iIndex
+    CHARACTER(len=30) :: idxName
+  END TYPE LookupTable
 
-    integer, parameter :: nValidIndices = 16
-    type(LookupTable), dimension(nValidIndices) :: indicesLookup = [ &
-      LookupTable(1,  "f107"),  &
-      LookupTable(2,  "f107a"), &
-      LookupTable(3,  "imfbx"), &
-      LookupTable(4,  "imfby"), &
-      LookupTable(5,  "imfbz"), &
-      LookupTable(6,  "swvx"),  &
-      LookupTable(7,  "swvy"),  &
-      LookupTable(8,  "swvz"),  &
-      LookupTable(9,  "swn"),   &
-      LookupTable(10, "swt"),   &
-      LookupTable(11, "ae"),    &
-      LookupTable(12, "au"),    &
-      LookupTable(13, "al"),    &
-      LookupTable(14, "hpi"),   &
-      LookupTable(15, "hpin"),  &
-      LookupTable(16, "hpis")   &
-      ]
-
+  integer, parameter :: nValidIndices = 16
+  type(LookupTable), dimension(nValidIndices) :: indicesLookup = [ &
+                                                 LookupTable(1, "f107"), &
+                                                 LookupTable(2, "f107a"), &
+                                                 LookupTable(3, "imfbx"), &
+                                                 LookupTable(4, "imfby"), &
+                                                 LookupTable(5, "imfbz"), &
+                                                 LookupTable(6, "swvx"), &
+                                                 LookupTable(7, "swvy"), &
+                                                 LookupTable(8, "swvz"), &
+                                                 LookupTable(9, "swn"), &
+                                                 LookupTable(10, "swt"), &
+                                                 LookupTable(11, "ae"), &
+                                                 LookupTable(12, "au"), &
+                                                 LookupTable(13, "al"), &
+                                                 LookupTable(14, "hpi"), &
+                                                 LookupTable(15, "hpin"), &
+                                                 LookupTable(16, "hpis") &
+                                                 ]
 
   public :: init_f107
   public :: init_ae
@@ -56,7 +55,7 @@ MODULE ModIndices
 
   ! Current time for "set once, query many" pattern
   type(TimeType), public :: currentTime = &
-    TimeType(0, 0, 0, 0, 0, 0, 0.0d0, -1.0d0, "")
+                            TimeType(0, 0, 0, 0, 0, 0, 0.0d0, -1.0d0, "")
 
   public :: decode_index
   interface decode_index
@@ -80,8 +79,6 @@ MODULE ModIndices
     module procedure set_time_type
     module procedure set_time_components
   end interface set_time
-
-
 
 contains
 

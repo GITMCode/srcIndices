@@ -44,7 +44,7 @@
     nVals = allIndices(iIndex)%nValues
 
     if (nVals == 0) then
-      call set_error("(get_index) no data loaded for index: "// decode_index(iIndex))
+      call set_error("(get_index) no data loaded for index: "//decode_index(iIndex))
       return
     endif
 
@@ -72,7 +72,7 @@
     IsFound = .false.
 
     do while (.not. IsFound)
-      iCenter = (iMin + iMax) / 2
+      iCenter = (iMin + iMax)/2
 
       if (iCenter >= iMax .or. iCenter <= iMin) then
         IsFound = .true.
@@ -92,11 +92,11 @@
     if (iMin == iMax) then
       outVal = allIndices(iIndex)%value(iCenter)
     else
-      DtNorm = 1.0 - real(allIndices(iIndex)%time(iMax)%Time - timeIn) / &
-               real(allIndices(iIndex)%time(iMax)%Time - &
-                    allIndices(iIndex)%time(iMin)%Time + 1.0d-6)
-      outVal = DtNorm * allIndices(iIndex)%value(iMax) + &
-              (1.0 - DtNorm) * allIndices(iIndex)%value(iMin)
+      DtNorm = 1.0 - real(allIndices(iIndex)%time(iMax)%Time - timeIn) &
+               /real(allIndices(iIndex)%time(iMax)%Time &
+                     - allIndices(iIndex)%time(iMin)%Time + 1.0d-6)
+      outVal = DtNorm*allIndices(iIndex)%value(iMax) &
+               + (1.0 - DtNorm)*allIndices(iIndex)%value(iMin)
     endif
 
   end subroutine get_index_int_wtime

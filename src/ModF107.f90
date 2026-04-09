@@ -7,9 +7,9 @@ Module ModF107
 
 contains
   subroutine read_f107(filename, times, values)
-  
+
     implicit none
-    
+
     character(len=*), intent(in) :: filename
     type(TimeType), dimension(nIndexValuesMax), intent(out) :: times
     real, dimension(nIndexValuesMax), intent(out) :: values

@@ -11,13 +11,13 @@
     character(len=*), intent(in) :: indName
 
     iIndex = -1
-    do i=1,nValidIndices ! Find where the index name matches what we're given
+    do i = 1, nValidIndices ! Find where the index name matches what we're given
       if (trim(indicesLookup(i)%idxName) == trim(indName)) then
         iIndex = indicesLookup(i)%iIndex
         return
       endif
     enddo
-    if (iIndex==-1) then
+    if (iIndex == -1) then
       isOk = .false.
     endif
 
