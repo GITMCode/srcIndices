@@ -13,8 +13,9 @@ MODULE ModIndices
   integer, parameter, public :: iZero_ = 0
 
   TYPE LookupTable
-    INTEGER   :: iIndex
-    CHARACTER(len=30) :: idxName
+    integer           :: iIndex
+    character(len=30) :: idxName
+
   END TYPE LookupTable
 
   integer, parameter :: nValidIndices = 17
@@ -88,8 +89,6 @@ MODULE ModIndices
   end interface set_time
 
 contains
-
-  ! INCLUDE "ModFileIO.f90"
 
   INCLUDE "time_subroutines.f90"
 

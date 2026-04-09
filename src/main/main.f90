@@ -156,11 +156,10 @@ program testIO
   print *, ""
   print *, ""
 
-
   ! ================================================ !
   ! Example of actual usage
   ! ================================================ !
-  
+
   ! Typical use case is to read all the indices, then start the model
   ! Time is set on the module-level so can be used for multiple calls to get_index
   ! isOk will be T if there are no errors, and any error will toggle it to F and persist
@@ -185,15 +184,15 @@ program testIO
   ! Check how many pts were read in. Could check any index, really...
   iAL = decode_index('al')
   print *, "> nPts AL = ", allIndices(iAL)%nValues, " ... isOK:", isOk
-  print*, ''
-  print*, ''
+  print *, ''
+  print *, ''
 
   print *, " > Table of a few things read in:"
-  
+
   ! header
   write(*, "(A19, 11(A10))") 'time', 'IMF Bx', 'IMF By', 'IMF Bz', &
-                             'SW Vx', 'SW den', 'SW Temp', &
-                             'AE', 'AU', 'AL', 'HPI', 'HPI_NH'
+    'SW Vx', 'SW den', 'SW Temp', &
+    'AE', 'AU', 'AL', 'HPI', 'HPI_NH'
   ! Set (most of the) date
   now%iYear = 2002
   now%iMonth = 12
@@ -218,9 +217,8 @@ program testIO
     call get_index('al', al)
     call get_index('hpi', hpi)
     call get_index('hpin', hpin)
-    write(*, "(A19, 11(F10.1))") now%String,  bx, by, bz, vx, den, t, ae, au, al, hpi, hpin
+    write(*, "(A19, 11(F10.1))") now%String, bx, by, bz, vx, den, t, ae, au, al, hpi, hpin
   enddo
-  
 
   print *, ""
   call report_warnings

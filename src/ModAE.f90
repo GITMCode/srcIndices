@@ -90,7 +90,6 @@ contains
 
         if (iPt > nIndexValuesMax) call set_error("(read_sme) Maximum number of values read!")
 
-
       endif
 
     enddo

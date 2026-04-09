@@ -386,7 +386,7 @@ contains
 
     Time%FracSecond = TimeRemaining - Time%iSecond
 
-    iMonth = 1;
+    iMonth = 1; 
     call fix_february(iYear)
 
     do while (iDay >= nDayInMonth_I(iMonth))

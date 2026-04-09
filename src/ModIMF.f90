@@ -22,7 +22,6 @@ contains
     type(TimeType) :: itime
     integer :: iError, nPts, IOUnit_, iPt
 
-
     iError = 0
 
     done = .false.
@@ -36,16 +35,15 @@ contains
     vx = rBadValue
     vy = rBadValue
     vz = rBadValue
-    n  = rBadValue
-    t  = rBadValue
+    n = rBadValue
+    t = rBadValue
 
     IOUnit_ = io_unit_new()
     open(IOUnit_, file=trim(filename), status="old", iostat=iError)
     if (ierror .ne. 0) then
-      call set_error("(read_omni) File could not be opened " // trim(filename))
+      call set_error("(read_omni) File could not be opened "//trim(filename))
       return
     endif
-
 
     do while (.not. done)
       read(IOUnit_, '(a)', iostat=ierror) line
@@ -61,7 +59,7 @@ contains
         done_inner = .false.
 
         iPt = 1
-        
+
         do while (.not. done_inner)
 
           read(IOUnit_, *, iostat=iError) &
@@ -81,7 +79,7 @@ contains
             ! done reading the file
             done_inner = .true.
           else
-            iTime%FracSecond = iTime%FracSecond / 1000.0
+            iTime%FracSecond = iTime%FracSecond/1000.0
             ! Convert time to real
             call time_int_to_real(iTime)
 
