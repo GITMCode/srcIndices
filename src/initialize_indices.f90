@@ -66,7 +66,7 @@ subroutine init_ae(filename)
     endif
   enddo
 
-  ! Set F107 values...
+  ! Set AE, AL, AU values...
   iAE = decode_index("ae")
   iAU = decode_index("au")
 
