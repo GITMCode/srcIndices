@@ -83,7 +83,7 @@ subroutine init_imf(filename)
 
     character(*), intent(in) :: filename
 
-    integer :: iPt, iBx, iBy, iBz, iVx, iVy, iVz, iDen, iT
+    integer :: iPt, iBx, iBy, iBz, iVx, iVy, iVz, iDen, iT, iVMag
     type(TimeType), dimension(nIndexValuesMax) :: times
     real, dimension(nIndexValuesMax) :: bx_tmp, by_tmp, bz_tmp
     real, dimension(nIndexValuesMax) :: vx_tmp, vy_tmp, vz_tmp
@@ -121,6 +121,14 @@ subroutine init_imf(filename)
     call set_index(iVy, times(1:nPts), vy_tmp(1:nPts), nPts)
     iVz = decode_index("swvz")
     call set_index(iVz, times(1:nPts), vz_tmp(1:nPts), nPts)
+
+    iVMag = decode_index("swvmag")
+    call set_index(iVMag, times(1:nPts), &
+                   sqrt(allIndices(iVx)%value**2 &
+                   + allIndices(iVx)%value**2 &
+                    + allIndices(iVx)%value**2 &
+                    ), &
+                    nPts)
 
     iDen = decode_index("swn")
     call set_index(iDen, times(1:nPts), den_tmp(1:nPts), nPts)

@@ -18,25 +18,26 @@ MODULE ModIndices
     CHARACTER(len=30) :: idxName
   END TYPE LookupTable
 
-  integer, parameter :: nValidIndices = 16
-  type(LookupTable), dimension(nValidIndices) :: indicesLookup = [ &
-                                                 LookupTable(1, "f107"), &
-                                                 LookupTable(2, "f107a"), &
-                                                 LookupTable(3, "imfbx"), &
-                                                 LookupTable(4, "imfby"), &
-                                                 LookupTable(5, "imfbz"), &
-                                                 LookupTable(6, "swvx"), &
-                                                 LookupTable(7, "swvy"), &
-                                                 LookupTable(8, "swvz"), &
-                                                 LookupTable(9, "swn"), &
-                                                 LookupTable(10, "swt"), &
-                                                 LookupTable(11, "ae"), &
-                                                 LookupTable(12, "au"), &
-                                                 LookupTable(13, "al"), &
-                                                 LookupTable(14, "hpi"), &
-                                                 LookupTable(15, "hpin"), &
-                                                 LookupTable(16, "hpis") &
-                                                 ]
+  integer, parameter :: nValidIndices = 17
+  type(LookupTable), parameter, dimension(nValidIndices) :: &
+    indicesLookup = [LookupTable(1, "f107"), &
+                     LookupTable(2, "f107a"), &
+                     LookupTable(3, "imfbx"), &
+                     LookupTable(4, "imfby"), &
+                     LookupTable(5, "imfbz"), &
+                     LookupTable(6, "swvx"), &
+                     LookupTable(7, "swvy"), &
+                     LookupTable(8, "swvz"), &
+                     LookupTable(9, "swvmag"), &
+                     LookupTable(10, "swn"), &
+                     LookupTable(11, "swt"), &
+                     LookupTable(12, "ae"), &
+                     LookupTable(13, "au"), &
+                     LookupTable(14, "al"), &
+                     LookupTable(15, "hpi"), &
+                     LookupTable(16, "hpin"), &
+                     LookupTable(17, "hpis") &
+                     ]
 
   public :: init_f107
   public :: init_ae

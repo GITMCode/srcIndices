@@ -6,6 +6,9 @@ Currently implemented readers/converters:
 | ------   |  :-----------    | :---             |
 | init_f107(filename) | f107       | f107a            |
 | init_ae(filename)  | ae, au, al | --  |
+| init_hpi(filename) |  *not implemented yet*  | -- |
+| init_hpi(AE) |  --   | hpi, hpin, hpis |
+| init_imf(filename) | imfbx, imfby, imfbz, swvx, swvy, swvz, swn, swt | swvmag |
 
 ## Quickstart
 
