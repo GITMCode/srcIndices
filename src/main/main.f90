@@ -1,6 +1,6 @@
 program testIO
 
-  use ModTimeIO
+  use ModTimeConvert
   use ModIndices
   use ModErrors
   use ModKind

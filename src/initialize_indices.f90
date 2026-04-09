@@ -140,7 +140,7 @@ subroutine init_imf(filename)
 
   subroutine init_hpi_from_ae(indAE)
 
-    use ModTimeIO, only: time_real_to_julian
+    use ModTimeConvert, only: time_real_to_julian
 
     type(IndexType), intent(in) :: indAE
     integer :: nPtsAE, iHPI, iHPIn, iHPIs, iTime

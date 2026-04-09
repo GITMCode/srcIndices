@@ -2,9 +2,9 @@
 module ModIMF
 
   use ModCharSize
-  use ModTimeIO
+  use ModTimeConvert
   use ModErrors
-  use ModIoUnits
+  use ModIoUnit
   use ModKind
 
 contains

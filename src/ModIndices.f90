@@ -2,8 +2,8 @@
 MODULE ModIndices
 
   use ModCharSize
-  use ModTimeIO
-  use ModIoUnits
+  use ModTimeConvert
+  use ModIoUnit
   use ModErrors
   use ModKind
 
