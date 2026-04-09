@@ -79,3 +79,19 @@ The interface `set_time()` dispatches the subroutines in `time_subroutines.f90`.
   end type TimeType
 ```
 
+----
+
+## Building & Coupling
+
+Several modules used by this library (`ModKind`, `ModIoUnit`, `ModErrors`, `ModTimeConvert`) may already be provided by a host model. To avoid conflicts, [`ModExtras.F90`](src/ModExtras.F90) wraps each module with pre-processor guards ensuring they're only compiled when needed.
+
+| Flag | Module provided |
+| ---- | :-------------- |
+| `STANDALONE` | All modules below |
+| `NEEDMODKIND` | `ModKind` |
+| `NEEDMODIOUNIT` | `ModIoUnit` |
+| `NEEDMODERRORS` | `ModErrors` |
+| `NEEDMODTIMECONVERT` | `ModTimeConvert` |
+
+Flags are passed through the `PreProc` variable in `Makefile.def`. When building standalone, [`build/Makefile.def`](build/Makefile.def) sets `PreProc = -DSTANDALONE` and all modules are compiled. When coupled, the host model's `Makefile.def` replaces this file. If no flags are set, nothing in `ModExtras` is compiled.
+
