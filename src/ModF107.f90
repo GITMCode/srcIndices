@@ -1,9 +1,9 @@
 
 Module ModF107
-  use ModCharSize
-  use ModTimeIO
+
+  use ModTimeConvert
   use ModErrors
-  use ModIoUnits
+  use ModIoUnit
 
 contains
   subroutine read_f107(filename, times, values)
@@ -16,7 +16,7 @@ contains
 
     integer :: iError, iPt, ioUnit
     type(TimeType) :: iTime
-    character(len=iCharLenIO_) :: line
+    character(len=200) :: line
     real :: f107val
     logical :: done
 

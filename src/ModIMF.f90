@@ -1,7 +1,6 @@
 
 module ModIMF
 
-  use ModCharSize
   use ModTimeConvert
   use ModErrors
   use ModIoUnit
@@ -17,7 +16,7 @@ contains
     real, dimension(nIndexValuesMax), intent(out) :: bx, by, bz, vx, vy, vz, n, t
 
     logical :: done, done_inner, IsFirstLine = .true.
-    character(len=iCharLenIO_) :: line
+    character(len=200) :: line
 
     real(Real8_) :: TimeDelay
     type(TimeType) :: itime

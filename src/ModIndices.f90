@@ -1,7 +1,6 @@
 
 MODULE ModIndices
 
-  use ModCharSize
   use ModTimeConvert
   use ModIoUnit
   use ModErrors

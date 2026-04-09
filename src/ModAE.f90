@@ -5,7 +5,6 @@
 
 module ModAE
 
-  use ModCharSize
   use ModTimeConvert
   use ModErrors
   use ModIoUnit
@@ -24,7 +23,7 @@ contains
     integer :: ierror, j, npts, ioUnit, iPt
     logical :: IsDone
     ! One line of input
-    character(len=iCharLenIO_) :: line
+    character(len=200) :: line
 
     real(Real8_) :: TimeDelay, BufferTime = 180.0
     real(Real8_) :: aeval, auval, alval
