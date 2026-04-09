@@ -21,9 +21,9 @@ module ModTimeIO
     integer           :: iHour
     integer           :: iMinute
     integer           :: iSecond
-    real(Real8_)      :: FracSecond
-    real(Real8_)      :: Time         ! time in seconds since base time
-    character(len=14) :: String       ! string with year...second.
+    real(Real8_)      :: FracSecond   ! 0 -> 1
+    real(Real8_)      :: Time         ! seconds since base time
+    character(len=22) :: String       ! string YYYY-MM-DD HH:MM:SS.ss
   end type TimeType
 
   public :: n_day_of_year    ! day of year
@@ -104,9 +104,9 @@ contains
       !  call CON_stop(NameSub//' ERROR invalid time')
     endif
 
-    write(Time%String, '(i4.4,5(i2.2))') &
+    write(Time%String, "(i4.4,'-',i2.2,'-',i2.2,' ',i2.2,':',i2.2,':',i2.2,'.',i2.2)") &
       Time%iYear, Time%iMonth, Time%iDay, &
-      Time%iHour, Time%iMinute, Time%iSecond
+      Time%iHour, Time%iMinute, Time%iSecond, nint(Time%FracSecond*100.0)
 
   end subroutine time_int_to_string
   !============================================================================
