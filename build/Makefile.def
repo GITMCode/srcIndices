@@ -13,6 +13,8 @@ OPT4 = -O4
 
 CFLAG = ${SEARCH} -c -w ${DEBUG} -fallow-argument-mismatch
 
+PreProc = -DSTANDALONE
+
 Cflag0  = ${CFLAG} ${PRECISION} ${OPT0}
 Cflag1  = ${CFLAG} ${PRECISION} ${OPT1}
 Cflag2  = ${CFLAG} ${PRECISION} ${OPT2}
@@ -24,6 +26,10 @@ Cflag4  = ${CFLAG} ${PRECISION} ${OPT4}
 
 .f90.o:
 	${COMPILE.f90} ${Cflag3} $<
+
+
+.F90.o:
+	${COMPILE.f90} ${PreProc} ${Cflag3} $<
 
 .f.o:
 	${COMPILE.f77} -ffixed-line-length-132 ${Cflag3} $<
