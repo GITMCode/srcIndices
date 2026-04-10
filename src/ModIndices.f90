@@ -39,11 +39,11 @@ MODULE ModIndices
                      LookupTable(17, "hpis") &
                      ]
 
-  public :: init_f107
-  public :: init_ae
-  public :: init_imf
-  public :: init_hpi
-  interface init_hpi
+  ! Initializers
+  ! Call these to kick off the process of reading & storing stuff
+  public :: init_f107, init_ae, init_imf, init_hpi
+
+  interface init_hpi ! can be called with a filename or nothing (to convert from AE)
     module procedure init_noaa_hpi, init_hpi_from_ae
   end interface init_hpi
 
