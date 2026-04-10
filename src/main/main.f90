@@ -86,8 +86,8 @@ program testIO
   endif
 
   print *, "> f107 file read successfully!"
-  print *, "> Number of f107 values: ", allIndices(1)%nValues
-  print *, ">> Number of f107a values: ", allIndices(2)%nValues
+  print *, "> Number of f107 values: ", get_nValues('f107')
+  print *, ">> Number of f107a values: ", get_nValues('f107')
 
   ! Test get_index with explicit time
   print *, ""
@@ -183,7 +183,7 @@ program testIO
 
   ! Check how many pts were read in. Could check any index, really...
   iAL = decode_index('al')
-  print *, "> nPts AL = ", allIndices(iAL)%nValues, " ... isOK:", isOk
+  print *, "> nPts AL = ", get_nValues('al'), " ... isOK:", isOk
   print *, ''
   print *, ''
 

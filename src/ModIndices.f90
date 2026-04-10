@@ -79,6 +79,12 @@ MODULE ModIndices
     module procedure get_index_char_wotime
   end interface get_index
 
+  public :: get_nValues
+  interface get_nValues
+    module procedure get_nValues_from_int
+    module procedure get_nValues_from_char
+  end interface
+
   public :: set_index
 
   public :: set_time
