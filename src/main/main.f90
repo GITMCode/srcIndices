@@ -122,7 +122,7 @@ program testIO
   ! For completeness, can also specify str & time in call to get_index
   print *, ""
   print *, "> Testing get_index with manual time & chars..."
-  call get_index("f107", now%time, f107val)
+  call get_index("f107", now%Time, f107val)
   print *, ">> f107 (via chars & real-time)    = ", f107val
 
   ! This is to verify that things are working. Easy to compare with 'tail f107.txt'

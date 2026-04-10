@@ -9,18 +9,18 @@
       return
     endif
 
-    if (allocated(allIndices(iIndex)%value)) &
-      deallocate(allIndices(iIndex)%value)
-    if (allocated(allIndices(iIndex)%time)) &
-      deallocate(allIndices(iIndex)%time)
+    if (allocated(allIndices(iIndex)%values)) &
+      deallocate(allIndices(iIndex)%values)
+    if (allocated(allIndices(iIndex)%times)) &
+      deallocate(allIndices(iIndex)%times)
 
-    allocate(allIndices(iIndex)%value(nPts))
-    allocate(allIndices(iIndex)%time(nPts))
+    allocate(allIndices(iIndex)%values(nPts))
+    allocate(allIndices(iIndex)%times(nPts))
 
     allIndices(iIndex)%iIndex = iIndex
     allIndices(iIndex)%nValues = nPts
-    allIndices(iIndex)%value = values(1:nPts)
-    allIndices(iIndex)%time = times(1:nPts)
+    allIndices(iIndex)%values = values(1:nPts)
+    allIndices(iIndex)%times = times(1:nPts)
 
   end subroutine set_index
 
@@ -50,19 +50,19 @@
 
     ! Single value = constant
     if (nVals == 1) then
-      outVal = allIndices(iIndex)%value(1)
+      outVal = allIndices(iIndex)%values(1)
       return
     endif
 
     ! Before first time: clamp to first value
-    if (timeIn <= allIndices(iIndex)%time(1)%Time) then
-      outVal = allIndices(iIndex)%value(1)
+    if (timeIn <= allIndices(iIndex)%times(1)%Time) then
+      outVal = allIndices(iIndex)%values(1)
       return
     endif
 
     ! After last time: clamp to last value
-    if (timeIn >= allIndices(iIndex)%time(nVals)%Time) then
-      outVal = allIndices(iIndex)%value(nVals)
+    if (timeIn >= allIndices(iIndex)%times(nVals)%Time) then
+      outVal = allIndices(iIndex)%values(nVals)
       return
     endif
 
@@ -77,10 +77,10 @@
       if (iCenter >= iMax .or. iCenter <= iMin) then
         IsFound = .true.
       else
-        if (timeIn == allIndices(iIndex)%time(iCenter)%Time) then
+        if (timeIn == allIndices(iIndex)%times(iCenter)%Time) then
           iMin = iCenter
           iMax = iCenter
-        else if (timeIn < allIndices(iIndex)%time(iCenter)%Time) then
+        else if (timeIn < allIndices(iIndex)%times(iCenter)%Time) then
           iMax = iCenter
         else
           iMin = iCenter
@@ -90,13 +90,13 @@
 
     ! Linear interpolation
     if (iMin == iMax) then
-      outVal = allIndices(iIndex)%value(iCenter)
+      outVal = allIndices(iIndex)%values(iCenter)
     else
-      DtNorm = 1.0 - real(allIndices(iIndex)%time(iMax)%Time - timeIn) &
-               /real(allIndices(iIndex)%time(iMax)%Time &
-                     - allIndices(iIndex)%time(iMin)%Time + 1.0d-6)
-      outVal = DtNorm*allIndices(iIndex)%value(iMax) &
-               + (1.0 - DtNorm)*allIndices(iIndex)%value(iMin)
+      DtNorm = 1.0 - real(allIndices(iIndex)%times(iMax)%Time - timeIn) &
+               /real(allIndices(iIndex)%times(iMax)%Time &
+                     - allIndices(iIndex)%times(iMin)%Time + 1.0d-6)
+      outVal = DtNorm*allIndices(iIndex)%values(iMax) &
+               + (1.0 - DtNorm)*allIndices(iIndex)%values(iMin)
     endif
 
   end subroutine get_index_int_wtime

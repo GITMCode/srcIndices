@@ -124,9 +124,9 @@ subroutine init_imf(filename)
 
   iVMag = decode_index("swvmag")
   call set_index(iVMag, times(1:nPts), &
-                 sqrt(allIndices(iVx)%value**2 &
-                      + allIndices(iVx)%value**2 &
-                      + allIndices(iVx)%value**2 &
+                 sqrt(allIndices(iVx)%values**2 &
+                      + allIndices(iVx)%values**2 &
+                      + allIndices(iVx)%values**2 &
                       ), &
                  nPts)
 
@@ -157,9 +157,9 @@ subroutine init_hpi_from_ae(indAE)
   ! AE -> HP uses formula from Wu et al, 2021
   ! see: https://doi.org/10.1029/2020SW002629
   iHPI = decode_index('hpi')
-  HPI = 0.102*indAE%value + 8.953
+  HPI = 0.102*indAE%values + 8.953
 
-  call set_index(iHPI, indAE%time, &
+  call set_index(iHPI, indAE%times, &
                  HPI, &
                  nPtsAE)
 
@@ -169,14 +169,14 @@ subroutine init_hpi_from_ae(indAE)
   iHPIn = decode_index('hpin')
   iHPIs = decode_index('hpis')
   do iTime = 1, nPtsAE
-    call time_real_to_julian(real(indAE%time(iTime)%Time), jday)
+    call time_real_to_julian(real(indAE%times(iTime)%Time), jday)
     tenPseasonalFactor(iTime) = 0.1*cos(jday*2*3.14159/365.)
   enddo
 
-  call set_index(iHPIn, indAE%time, &
+  call set_index(iHPIn, indAE%times, &
                  (1 + tenPseasonalFactor)*HPI, &
                  nPtsAE)
-  call set_index(iHPIs, indAE%time, &
+  call set_index(iHPIs, indAE%times, &
                  (1 - tenPseasonalFactor)*HPI, &
                  nPtsAE)
 

@@ -53,9 +53,9 @@ MODULE ModIndices
   type IndexType
     integer :: iIndex ! f107, bz, etc.
     integer :: nValues = 0
-    ! Each index stores arrays of the time & value @ that time
-    real, allocatable, dimension(:) :: value
-    type(TimeType), allocatable, dimension(:) :: time
+    ! Each index stores arrays of the times & values
+    real, allocatable, dimension(:) :: values
+    type(TimeType), allocatable, dimension(:) :: times
   end type indexType
 
   ! Central storage for all loaded indices

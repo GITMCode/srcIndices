@@ -42,7 +42,7 @@ contains
     au = rBadValue
     al = rBadValue
     iTime%FracSecond = 0.0d0
-    iTime%time = 0.0d0
+    iTime%Time = 0.0d0
 
     ioUnit = io_unit_new()
 
