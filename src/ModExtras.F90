@@ -41,8 +41,6 @@ module ModIoUnit
 
   !PUBLIC DATA MEMBERS:
 
-  integer, parameter, public :: nIndexValuesMax = 500000 ! hopefully this is enough :)
-  real, parameter, public  :: rBadValue = -6e6
 
   integer, parameter, public :: StdIn_ = 5  ! Standard input
   integer, parameter, public :: StdOut_ = 6  ! Standard output

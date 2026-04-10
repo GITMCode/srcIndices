@@ -24,6 +24,7 @@ MYLIB = ../lib/libIO.a
 
 
 OBJECTS = \
+	ModIndConsts.o\
 	ModExtras.o\
 	ModF107.o\
 	ModAE.o\

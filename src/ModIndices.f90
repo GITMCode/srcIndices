@@ -1,6 +1,7 @@
 
 MODULE ModIndices
 
+  use ModIndConsts
   use ModTimeConvert
   use ModIoUnit
   use ModErrors
@@ -9,8 +10,6 @@ MODULE ModIndices
   implicit none
 
   private
-
-  integer, parameter, public :: iZero_ = 0
 
   TYPE LookupTable
     integer           :: iIndex

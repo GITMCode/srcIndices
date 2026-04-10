@@ -5,16 +5,17 @@
 
 module ModAE
 
+  use ModIndConsts
   use ModTimeConvert
   use ModErrors
   use ModIoUnit
   use ModKind
 
+  implicit none
+
 contains
 
   subroutine read_sme(filename, times, ae, au, al)
-
-    implicit none
 
     character(len=*), intent(in) :: filename
     type(TimeType), dimension(nIndexValuesMax), intent(out) :: times

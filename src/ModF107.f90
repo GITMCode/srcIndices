@@ -1,14 +1,16 @@
 
 Module ModF107
 
+  use ModIndConsts
   use ModTimeConvert
   use ModErrors
   use ModIoUnit
 
+  implicit none
+
 contains
   subroutine read_f107(filename, times, values)
 
-    implicit none
 
     character(len=*), intent(in) :: filename
     type(TimeType), dimension(nIndexValuesMax), intent(out) :: times

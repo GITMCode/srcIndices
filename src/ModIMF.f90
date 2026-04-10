@@ -1,15 +1,17 @@
 
 module ModIMF
 
+  use ModIndConsts
   use ModTimeConvert
   use ModErrors
   use ModIoUnit
   use ModKind
 
+  implicit none
+
 contains
 
   subroutine read_omni(filename, times, bx, by, bz, vx, vy, vz, n, t)
-    implicit none
 
     character(len=*), intent(in) :: filename
     type(TimeType), dimension(nIndexValuesMax), intent(out) :: times
@@ -20,13 +22,12 @@ contains
 
     real(Real8_) :: TimeDelay
     type(TimeType) :: itime
-    integer :: iError, nPts, IOUnit_, iPt
+    integer :: iError, IOUnit_, iPt
 
     iError = 0
 
     done = .false.
 
-    nPts = 0
     TimeDelay = 0.0
 
     bx = rBadValue
@@ -94,7 +95,6 @@ contains
 
         enddo
 
-        nPts = iPt - 1
         done = done_inner
       endif
     enddo
