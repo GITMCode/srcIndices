@@ -137,56 +137,71 @@ subroutine init_imf(filename)
 
 end subroutine init_imf
 
-subroutine init_hpi_from_ae()
+subroutine init_hpi(filename)
+  !! Initializes Hemispheric power
+  !! filename is optional, either give the path to a HPI file
+  !! or call with no arguments to convert AE-> HPI
 
   use ModTimeConvert, only: time_real_to_julian
+  use ModHPI, only: read_NOAA_HPI, AE_to_HPI
 
-  integer :: nPtsAE, iHPI, iHPIn, iHPIs, iTime, iAE
+  integer :: nPtsAE, iHPI, iHPIn, iHPIs, iTime, iAE, nPtsHPI
+  character(*), intent(in), optional :: filename
   real, dimension(:), allocatable :: HPI, tenPSeasonalFactor
   real :: jday
+  type(TimeType), dimension(nIndexValuesMax) :: times
 
-  iAE = decode_index('ae')
-  nPtsAE = get_nValues(iAE)!indAE%nValues
-  if (nPtsAE == 0) then
-    call set_error("(init_hpi) - Cannot initialize HPI before AE")
-    return
+  ! If we do not have filename, convert AE -> HP
+  if (.not. (present(filename))) then
+    nPtsAE = get_nValues('ae')
+    allocate(HPI(nPtsAE))
+
+    iAE = decode_index('ae')
+    call AE_to_HPI(allIndices(iAE)%values, hpi)
+    times = allIndices(iAE)%times
+    nPtsHPI = nPtsAE
+
+  else
+    ! Read from file if we were given filename
+    allocate(HPI(nIndexValuesMax))
+    call read_NOAA_HPI(filename, times, hpi)
+
+    ! Determine how many valid values we have
+    nPtsHPI = nIndexValuesMax
+    do iTime = 1, nIndexValuesMax
+      if (HPI(iTime) == rBadValue) then
+        nPtsHPI = iTime - 1
+        exit
+      endif
+    enddo
+
   endif
 
-  allocate(HPI(nPtsAE), tenPSeasonalFactor(nPtsAE))
-
-  ! AE -> HP uses formula from Wu et al, 2021
-  ! see: https://doi.org/10.1029/2020SW002629
+  ! Both will have put values into HPI
+  ! If they were derived from AE< this will just slice thru all values
   iHPI = decode_index('hpi')
-  HPI = 0.102*allIndices(iAE)%values + 8.953
-
-  call set_index(iHPI, allIndices(iAE)%times, &
-                 HPI, &
-                 nPtsAE)
+  call set_index(iHPI, &
+                 times(1:nPtsHPI), HPI(1:nPtsHPI), &
+                 nPtsHPI)
+  
+  allocate(tenPSeasonalFactor(nPtsHPI))
 
   ! N/S hemispheric power use a 10% offset w/ season
   ! See: https://doi.org/10.1029/2006GL028444
   tenPSeasonalFactor = 0
   iHPIn = decode_index('hpin')
   iHPIs = decode_index('hpis')
-  do iTime = 1, nPtsAE
-    call time_real_to_julian(real(allIndices(iAE)%times(iTime)%Time), jday)
+  do iTime = 1, nPtsHPI
+    call time_real_to_julian(real(allIndices(iHPI)%times(iTime)%Time), jday)
     tenPseasonalFactor(iTime) = 0.1*cos(jday*2*3.14159/365.)
   enddo
 
-  call set_index(iHPIn, allIndices(iAE)%times, &
-                 (1 + tenPseasonalFactor)*HPI, &
-                 nPtsAE)
-  call set_index(iHPIs, allIndices(iAE)%times, &
-                 (1 - tenPseasonalFactor)*HPI, &
-                 nPtsAE)
+  ! Fill N/S values
+  call set_index(iHPIn, allIndices(iHPI)%times, &
+                (1 + tenPseasonalFactor)*HPI, &
+                nPtsHPI)
+  call set_index(iHPIs, allIndices(iHPI)%times, &
+                (1 - tenPseasonalFactor)*HPI, &
+                nPtsHPI)
 
-end subroutine init_hpi_from_ae
-
-subroutine init_noaa_hpi(filename)
-  character(*), intent(in) :: filename
-
-  call set_error('(init_hpi) Initializing HPI from file is not yet supported!')
-
-  return
-
-end subroutine init_noaa_hpi
+end subroutine init_hpi

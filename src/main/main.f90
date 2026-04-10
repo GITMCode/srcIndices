@@ -169,9 +169,12 @@ program testIO
   print *, "> Reading AE and IMF data..."
   call init_ae("data/ae20021221.dat")
   call init_imf("data/imf20021221.dat")
-  ! Then we'll set HPI to be derived from AE
-  iAE = decode_index('ae')
-  call init_hpi()
+
+  ! Then we'll set HPI to be read from file
+  call init_hpi('data/hp_from_ae.txt')
+  ! alternatively, it could be calculated from AE with:
+  ! call init_hpi()
+
   ! then check if all is ok
   if (isOk) then
     print *, "> Read was successful!"

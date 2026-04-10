@@ -28,6 +28,7 @@ OBJECTS = \
 	ModExtras.o\
 	ModF107.o\
 	ModAE.o\
+	ModHPI.o\
 	ModIMF.o\
 	ModIndices.o
 

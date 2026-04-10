@@ -42,10 +42,6 @@ MODULE ModIndices
   ! Call these to kick off the process of reading & storing stuff
   public :: init_f107, init_ae, init_imf, init_hpi
 
-  interface init_hpi ! can be called with a filename or nothing (to convert from AE)
-    module procedure init_noaa_hpi, init_hpi_from_ae
-  end interface init_hpi
-
   public :: indexType
   type IndexType
     integer :: iIndex ! f107, bz, etc.
