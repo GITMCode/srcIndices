@@ -90,12 +90,12 @@ MODULE ModIndices
 
 contains
 
-  INCLUDE "time_subroutines.f90"
+  INCLUDE "time_subroutines.inc"
 
-  INCLUDE "indices_lookup.f90"
+  INCLUDE "indices_lookup.inc"
 
-  INCLUDE "initialize_indices.f90"
+  INCLUDE "initialize_indices.inc"
 
-  INCLUDE "index_retrieval.f90"
+  INCLUDE "index_retrieval.inc"
 
 end MODULE ModIndices

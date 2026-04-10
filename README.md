@@ -55,7 +55,7 @@ If there are any errors, `isOk=.false.`. Errors and warnings can be printed with
 
 This library can store & convert times to make subsequent calls easier. 
 
-The interface `set_time()` dispatches the subroutines in `time_subroutines.f90`. Time can be set with:
+The interface `set_time()` dispatches the subroutines in `time_subroutines.inc`. Time can be set with:
 - [`TimeType`](src/ModTime.f90)
 - real: (sec since Jan 1, 1965)
 - components: (year, month, day, hour, minute, second)
