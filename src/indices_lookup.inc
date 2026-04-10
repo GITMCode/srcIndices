@@ -22,3 +22,18 @@
     endif
 
   end function get_index_id
+
+integer function get_nValues_from_int(iIndex) result(nValues)
+  integer, intent(in) :: iIndex
+
+  nValues = allIndices(iIndex)%nValues
+
+end function get_nValues_from_int
+
+integer function get_nValues_from_char(cIndex) result(nValues)
+  character(*), intent(in) :: cIndex
+  integer :: iIndex
+  iIndex = decode_index(cIndex)
+  nValues = allIndices(iIndex)%nValues
+
+end function get_nValues_from_char

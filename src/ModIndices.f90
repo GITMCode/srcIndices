@@ -43,10 +43,8 @@ MODULE ModIndices
   public :: init_ae
   public :: init_imf
   public :: init_hpi
-
   interface init_hpi
-    module procedure init_noaa_hpi
-    module procedure init_hpi_from_ae
+    module procedure init_noaa_hpi, init_hpi_from_ae
   end interface init_hpi
 
   public :: indexType
@@ -59,10 +57,10 @@ MODULE ModIndices
   end type indexType
 
   ! Central storage for all loaded indices
-  type(indexType), dimension(nValidIndices), public :: allIndices
+  type(indexType), dimension(nValidIndices) :: allIndices
 
   ! Current time for "set once, query many" pattern
-  type(TimeType), public :: currentTime = &
+  type(TimeType) :: currentTime = &
                             TimeType(0, 0, 0, 0, 0, 0, 0.0d0, -1.0d0, "")
 
   public :: decode_index

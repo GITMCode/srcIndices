@@ -137,16 +137,16 @@ subroutine init_imf(filename)
 
 end subroutine init_imf
 
-subroutine init_hpi_from_ae(indAE)
+subroutine init_hpi_from_ae()
 
   use ModTimeConvert, only: time_real_to_julian
 
-  type(IndexType), intent(in) :: indAE
-  integer :: nPtsAE, iHPI, iHPIn, iHPIs, iTime
+  integer :: nPtsAE, iHPI, iHPIn, iHPIs, iTime, iAE
   real, dimension(:), allocatable :: HPI, tenPSeasonalFactor
   real :: jday
 
-  nPtsAE = indAE%nValues
+  iAE = decode_index('ae')
+  nPtsAE = get_nValues(iAE)!indAE%nValues
   if (nPtsAE == 0) then
     call set_error("(init_hpi) - Cannot initialize HPI before AE")
     return
@@ -157,9 +157,9 @@ subroutine init_hpi_from_ae(indAE)
   ! AE -> HP uses formula from Wu et al, 2021
   ! see: https://doi.org/10.1029/2020SW002629
   iHPI = decode_index('hpi')
-  HPI = 0.102*indAE%values + 8.953
+  HPI = 0.102*allIndices(iAE)%values + 8.953
 
-  call set_index(iHPI, indAE%times, &
+  call set_index(iHPI, allIndices(iAE)%times, &
                  HPI, &
                  nPtsAE)
 
@@ -169,14 +169,14 @@ subroutine init_hpi_from_ae(indAE)
   iHPIn = decode_index('hpin')
   iHPIs = decode_index('hpis')
   do iTime = 1, nPtsAE
-    call time_real_to_julian(real(indAE%times(iTime)%Time), jday)
+    call time_real_to_julian(real(allIndices(iAE)%times(iTime)%Time), jday)
     tenPseasonalFactor(iTime) = 0.1*cos(jday*2*3.14159/365.)
   enddo
 
-  call set_index(iHPIn, indAE%times, &
+  call set_index(iHPIn, allIndices(iAE)%times, &
                  (1 + tenPseasonalFactor)*HPI, &
                  nPtsAE)
-  call set_index(iHPIs, indAE%times, &
+  call set_index(iHPIs, allIndices(iAE)%times, &
                  (1 - tenPseasonalFactor)*HPI, &
                  nPtsAE)
 

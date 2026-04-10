@@ -171,7 +171,7 @@ program testIO
   call init_imf("data/imf20021221.dat")
   ! Then we'll set HPI to be derived from AE
   iAE = decode_index('ae')
-  call init_hpi(allIndices(iAE))
+  call init_hpi()
   ! then check if all is ok
   if (isOk) then
     print *, "> Read was successful!"
@@ -190,7 +190,7 @@ program testIO
   print *, " > Table of a few things read in:"
 
   ! header
-  write(*, "(A19, 11(A10))") 'time', 'IMF Bx', 'IMF By', 'IMF Bz', &
+  write(*, "(A19, 11(A11))") 'time', 'IMF Bx', 'IMF By', 'IMF Bz', &
     'SW Vx', 'SW den', 'SW Temp', &
     'AE', 'AU', 'AL', 'HPI', 'HPI_NH'
   ! Set (most of the) date
@@ -217,7 +217,7 @@ program testIO
     call get_index('al', al)
     call get_index('hpi', hpi)
     call get_index('hpin', hpin)
-    write(*, "(A19, 11(F10.1))") now%String, bx, by, bz, vx, den, t, ae, au, al, hpi, hpin
+    write(*, "(A19, 11(F11.1))") now%String, bx, by, bz, vx, den, t, ae, au, al, hpi, hpin
   enddo
 
   print *, ""
