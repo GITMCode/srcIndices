@@ -1,21 +1,26 @@
 
 default : LIB
 
-# Check which makefile.def to use by default:
-# $(wildcard path/to/file) returns a path if the file exists (empty str if not)
-# So if file exists, parens will =/= and if-block is entered
-# > If file DNE, () are equal and we include ../build/Makefile.def
-ifneq ($(wildcard ../../../Makefile.def),)
-  include ../../../Makefile.def
-else
-  include ../build/Makefile.def
-endif
+include ${DIRSFILE}
+include ${BUILDDIR}/Makefile.conf
 
+include Makefile.DEPEND
 
--include ../../../Makefile.conf
--include Makefile.DEPEND
+## Check which makefile.def to use by default:
+## $(wildcard path/to/file) returns a path if the file exists (empty str if not)
+## So if file exists, parens will =/= and if-block is entered
+## > If file DNE, () are equal and we include ../build/Makefile.def
+#ifneq ($(wildcard ../../../Makefile.def),)
+#  include ../../../Makefile.def
+#else
+#  include ../build/Makefile.def
+#endif
+#
+#
+#-include ../../../Makefile.conf
+#-include Makefile.DEPEND
 
-MYLIB = ../lib/libIO.a
+MYLIB = ${LIBDIR}/libIO.a
 
 # ModExtras provides ModKind, ModIoUnit, ModErrors, ModTimeConvert for standalone
 # This can come from elsewhere or be used from ModExtras.
