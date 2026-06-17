@@ -1,23 +1,25 @@
 
-default : ALL
+.PHONY: default ALL LIB cleanall rundir
 
-# This defines the directory structures:
-include build/Makefile.dirs
+default: ALL
+
+ifeq ($(wildcard build/Makefile.local),)
+  $(error build/Makefile.local not found. Run ./config.sh --compiler=<gfortran|nagfor> to configure.)
+endif
+include build/Makefile.local
 
 ALL:
 	@cd src; make LIB
-	@cd src/main; make TEST
+	@cd src/main; make DIRSFILE=${DIRSFILE} BUILDDIR=${BUILDDIR} TEST
 
 cleanall:
-	@echo "--> Cleaning IOLIB"
+	@echo "--> Cleaning srcIndices"
 	@echo "  --> Current directory : `pwd`"
 	@echo "  --> Removing library file in lib:"
 	@rm -f lib/*.a
 	@echo "  --> Removing files in src:"
-	@cd src; make --no-print-directory DIRSFILE=${DIRSFILE} clean
-	@echo "  --> Removing files in src/main:"
-	@cd src/main; make --no-print-directory DIRSFILE=${DIRSFILE} clean
-	@echo "--> Done Cleaning Electrodynamics"
+	@cd src; make --no-print-directory clean
+	@echo "--> Done Cleaning srcIndices"
 
 rundir:
 	rm -rf run
@@ -25,7 +27,6 @@ rundir:
 	cd run ; ln -s ../src/io_test.exe ; ln -s ../data .
 
 LIB:
-	@cd src; make --no-print-directory DIRSFILE=${DIRSFILE} SHARELIB
+	@cd src; make --no-print-directory SHARELIB
 
-clean:	cleanall
-
+clean: cleanall
