@@ -12,6 +12,10 @@ Currently implemented readers/converters:
 
 ## Quickstart
 
+> ***NOTE:*** If you found this library was cloned automatically by another model, it 
+> should compile without any intervention. Just configure the host model with any 
+> necessary flags & compile it.
+
 An example program can be found in src/main/main.f90
 
 To run it:
@@ -20,9 +24,10 @@ To run it:
 - Create a run directory
 - Run the executable
 
-```
+```bash
 git clone git@github.com:GITMCode/srcIndices.git
 cd srcIndices
+./config.sh --compiler gfortran
 make
 make rundir
 cd run
@@ -31,8 +36,8 @@ cd run
 
 After making the run directory, subsequent runs can use the one-liner:
 
-```
-make cleanall && make && ./run/io_text.exe
+```bash
+make clean && make && ./run/io_test.exe
 ```
 
 
@@ -56,7 +61,7 @@ If there are any errors, `isOk=.false.`. Errors and warnings can be printed with
 This library can store & convert times to make subsequent calls easier. 
 
 The interface `set_time()` dispatches the subroutines in `time_subroutines.inc`. Time can be set with:
-- [`TimeType`](src/ModTime.f90)
+- [`TimeType`](src/ModExtras.F90#L188)
 - real: (sec since Jan 1, 1965)
 - components: (year, month, day, hour, minute, second)
 - Day-of-year conversion is handled automatically by `TimeType`
@@ -81,9 +86,44 @@ The interface `set_time()` dispatches the subroutines in `time_subroutines.inc`.
 
 ----
 
-## Building & Coupling
+## Configuring & Compiling within other models
 
-Several modules used by this library (`ModKind`, `ModIoUnit`, `ModErrors`, `ModTimeConvert`) may already be provided by a host model. To avoid conflicts, [`ModExtras.F90`](src/ModExtras.F90) wraps each module with pre-processor guards ensuring they're only compiled when needed.
+### How it works
+
+The build system requires `build/Makefile.local` to exist before compiling. It contains two variables:
+
+    DIRSFILE := /path/to/Makefile.dirs    # directory/path variables
+    BUILDDIR  := /path/to/build/dir       # directory also searched for Makefile.conf
+
+`Makefile.conf` holds compiler flags and suffix rules.
+
+For standalone builds all three files live in this repo's `build/` directory. For coupled builds, `DIRSFILE` and `BUILDDIR` point into the host model's tree so that the host model's compiler settings are used.
+
+### How to couple to a new host model
+
+Three steps in your host model's configure script:
+
+1. Write `build/Makefile.local` pointing to your build config:
+
+```make
+    BUILDDIR  := /path/to/your/build/dir       # must contain Makefile.conf
+    DIRSFILE  := /path/to/your/Makefile.dirs   # path/directory variables
+```
+
+2. Touch `src/Makefile.DEPEND` so make can include it:
+
+```bash
+    touch /path/to/ext/srcIndices/src/Makefile.DEPEND
+```
+
+3. Build the library:
+
+```bash
+    cd /path/to/ext/srcIndices && make LIB
+```
+### PreProc flags for coupling
+
+Several modules (`ModKind`, `ModIoUnit`, `ModErrors`, `ModTimeConvert`) may already be provided by a host model. To avoid conflicts, [`ModExtras.F90`](src/ModExtras.F90) wraps each module with pre-processor guards ensuring they're only compiled when needed.
 
 | Flag | Module provided |
 | ---- | :-------------- |
@@ -93,5 +133,6 @@ Several modules used by this library (`ModKind`, `ModIoUnit`, `ModErrors`, `ModT
 | `NEEDMODERRORS` | `ModErrors` |
 | `NEEDMODTIMECONVERT` | `ModTimeConvert` |
 
-Flags are passed through the `PreProc` variable in `Makefile.def`. When building standalone, [`build/Makefile.def`](build/Makefile.def) sets `PreProc = -DSTANDALONE` and all modules are compiled. When coupled, the host model's `Makefile.def` replaces this file. If no flags are set, nothing in `ModExtras` is compiled.
+Flags are passed through the `PreProc` variable in `Makefile.conf`. When building standalone, [`build/Makefile.conf.gfortran`](build/Makefile.conf.gfortran) sets `PreProc = -DSTANDALONE` and all modules are compiled. When coupled, the host model's compiler config is used instead. If no flags are set, nothing in `ModExtras` is compiled.
+
 

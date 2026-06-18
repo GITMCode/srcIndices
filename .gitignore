@@ -5,6 +5,9 @@
 *.exe
 *.DEPEND
 *.depend
+build/Makefile.local
+build/Makefile.conf
+
 
 # Run dirs
 run*/

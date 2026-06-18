@@ -1,32 +1,19 @@
 
 default : LIB
 
-include ${DIRSFILE}
-include ${BUILDDIR}/Makefile.conf
+ifeq ($(wildcard ../build/Makefile.local),)
+  $(error ../build/Makefile.local not found. Run config.sh from the srcIndices root to configure.)
+endif
+include ../build/Makefile.local
+
+include $(DIRSFILE)
+ifneq ($(wildcard $(BUILDDIR)/Makefile.conf),)
+  include $(BUILDDIR)/Makefile.conf
+endif
 
 include Makefile.DEPEND
 
-## Check which makefile.def to use by default:
-## $(wildcard path/to/file) returns a path if the file exists (empty str if not)
-## So if file exists, parens will =/= and if-block is entered
-## > If file DNE, () are equal and we include ../build/Makefile.def
-#ifneq ($(wildcard ../../../Makefile.def),)
-#  include ../../../Makefile.def
-#else
-#  include ../build/Makefile.def
-#endif
-#
-#
-#-include ../../../Makefile.conf
-#-include Makefile.DEPEND
-
-MYLIB = ${LIBDIR}/libIO.a
-
-# ModExtras provides ModKind, ModIoUnit, ModErrors, ModTimeConvert for standalone
-# This can come from elsewhere or be used from ModExtras.
-# Use PreProc (in Makefile.def) to specify what's needed 
-# (#STANDALONE for all, #NEEDMODTIMECONVERT, etc.)
-
+MYLIB = ../lib/libIO.a
 
 OBJECTS = \
 	ModIndConsts.o\
@@ -37,8 +24,19 @@ OBJECTS = \
 	ModIMF.o\
 	ModIndices.o
 
+# Fallback if ${SCRIPTDIR}/depend.pl cannot be found.
+# It is gitm-specific. this allows Makefile.DEPEND to be created in tiegcm
+
 DEPEND:
-	@perl ${SCRIPTDIR}/depend.pl  ${SEARCH} ${LIBDIR} ${OBJECTS}
+	@if [ -f "${SCRIPTDIR}/depend.pl" ]; then \
+		perl ${SCRIPTDIR}/depend.pl ${SEARCH} ${LIBDIR} ${OBJECTS}; \
+	elif [ -f "${SCRIPTDIR}/mkdepends" ]; then \
+		perl ${SCRIPTDIR}/mkdepends . ext && mv Depends Makefile.DEPEND; \
+	else \
+		touch Makefile.DEPEND; \
+	fi
+
+Makefile.DEPEND: DEPEND
 
 LIB:
 	@make ${MYLIB}
@@ -53,3 +51,4 @@ ${MYLIB}: ${OBJECTS}
 
 SHARELIB: DEPEND
 	@make ${MYLIB}
+
