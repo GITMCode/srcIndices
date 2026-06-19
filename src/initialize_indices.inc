@@ -125,8 +125,8 @@ subroutine init_imf(filename)
   iVMag = decode_index("swvmag")
   call set_index(iVMag, times(1:nPts), &
                  sqrt(allIndices(iVx)%values**2 &
-                      + allIndices(iVx)%values**2 &
-                      + allIndices(iVx)%values**2 &
+                      + allIndices(iVy)%values**2 &
+                      + allIndices(iVz)%values**2 &
                       ), &
                  nPts)
 
